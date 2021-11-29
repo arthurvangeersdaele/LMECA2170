@@ -8,7 +8,7 @@
 #define TREE_H_
 
 typedef struct Treenode {
-	struct Point *value;
+	Point *value;
 	struct Treenode *parent;
 	struct Treenode *left;
 	struct Treenode *right;
@@ -17,7 +17,7 @@ typedef struct Treenode {
 
 Treenode *createNode(Point*);
 bool checkTree(Treenode*);
-bool insertPoint(Treenode**, Point*, Treenode*);
+bool insertPoint(Treenode**, Point*, Treenode*, bool);
 bool findPoint(Treenode*, Point*);
 void printtabs(int);
 void printTreeRec(Treenode*, int);

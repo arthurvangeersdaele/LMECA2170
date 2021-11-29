@@ -44,21 +44,33 @@ Treenode *createNode(Point *p) {
 	}
 }*/
 
-bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent) {
+bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent, bool b) {
 	Treenode *root = *rootptr;
 	if (root == NULL) {
 		(*rootptr) = createNode(p);
-		(*rootptr)->parent = parent;
+		if (parent!=NULL){
+			(*rootptr)->parent = parent;
+		}
+		else{
+			(*rootptr)->parent = NULL;
+		}
 		return true;
 	}
 	if (p->x == root->value->x && p->y == root->value->y) {
-		return false;
+		if (b){
+			(*rootptr) = createNode(p);
+			(*rootptr)->parent = parent;
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	if (p->y < root->value->y || (p->y == root->value->y && p->x < root->value->x)) {
-		return insertPoint(&(root->left), p, root->left);
+		return insertPoint(&(root->left), p, root->left, b);
 	}
 	else {
-		return insertPoint(&(root->right), p, root->right);
+		return insertPoint(&(root->right), p, root->right, b);
 	}
 }
 
@@ -81,15 +93,64 @@ bool findPoint(Treenode *root, Point *p) {
 bool checkTree(Treenode* root){
 	if(root != NULL){
 		if(root-> left != NULL){
-			insertPoint(&root->left, root->value, root);
+			printf("Insert node\n");
+			printPoint(root->value);
+			printf("\n");
+			
+			insertPoint(&root->left, root->value, root, true);
+			//printTree(root);
+			//printf("\n");
+			//printf("\n");
 			checkTree(root->left);
-		}
-		if(root->right->left != NULL || root->right->right != NULL){
-			checkTree(root->right);
+			if (root->right != NULL){
+				if(root->right->left != NULL || root->right->right != NULL){
+					/*printf("RIGHT PART\n");
+					printPoint(root->value);
+					if(root->right->left != NULL){
+						printf("LEFT: ");
+						printPoint(root->right->left->value);
+					}
+					if(root->right->right != NULL){
+						printf("RIGHT: ");
+						printPoint(root->right->right->value);
+					}
+					printf("\n");*/
+					checkTree(root->right);
+					//printf("END1\n");
+					//return true;
+				}
+			}
+			printf("END2\n");
+			return true;
 		}
 		else{
-			root->left = createNode(root->left->value);
+			printf("Create node\n");
+			printPoint(root->value);
+			root->left = createNode(root->value);
 			root->left->parent = root;
+			//printTree(root);
+			//printf("\n");
+			printf("\n");
+			if (root->right != NULL){
+				if(root->right->left != NULL || root->right->right != NULL){
+					/*printf("RIGHT PART\n");
+					printPoint(root->value);
+					if(root->right->left != NULL){
+						printf("LEFT: ");
+						printPoint(root->right->left->value);
+					}
+					if(root->right->right != NULL){
+						printf("RIGHT: ");
+						printPoint(root->right->right->value);
+					}
+					printf("\n");*/
+					checkTree(root->right);
+					//printf("END3\n");
+					//return true;
+				}
+			}
+			printf("END4\n");
+			return true;
 		}
 	}
 	return false; 
@@ -110,7 +171,8 @@ void printTreeRec(Treenode* root, int level) {
 		return;
 	}
 	printtabs(level);
-	printf("value = (%f, %f) : %d\n", root->value->x, root->value->y, root->value->value);
+	printPoint(root->value);
+	//printf("value = (%f, %f) : %d\n", root->value->x, root->value->y, root->value->value);
 	printtabs(level);
 	printf("left\n");
 

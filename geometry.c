@@ -7,16 +7,19 @@
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Points 2D
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-Point createPoint(float x, float y, int value) {
+Point *createPoint(float x, float y, int value) {
 	Point *result = malloc(sizeof(Point));
 	if (result != NULL) {
 		result->x = x;
 		result->y = y;
 		result->value = value;
 	}
-	return *result;
+	return result;
 }
 
+void printPoint(Point *p) {
+	printf("Point = (%f, %f), value = %d\n", p->x, p->y, p->value);
+}
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/

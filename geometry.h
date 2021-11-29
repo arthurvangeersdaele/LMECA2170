@@ -15,7 +15,8 @@ typedef struct Point{
 	int value;
 } Point;
 
-Point createPoint(float, float, int);
+Point *createPoint(float, float, int);
+void printPoint(Point *p);
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Segments
