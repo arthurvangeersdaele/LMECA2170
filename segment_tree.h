@@ -16,9 +16,9 @@ typedef struct Treeseg {
 }Treeseg;
 
 Treeseg *createSeg(Segment*);
-bool checkTree2(Treeseg*);
+//bool checkTree2(Treeseg*);
 bool insertSeg(Treeseg**, Segment*, Treeseg*, bool, bool);
-bool findSeg(Treeseg*, Segment*);
+//bool findSeg(Treeseg*, Segment*);
 Treeseg* delSeg(Treeseg*, Treeseg*);
 
 
