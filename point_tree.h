@@ -17,8 +17,9 @@ typedef struct Treenode {
 
 Treenode *createNode(Point*);
 bool checkTree(Treenode*);
-bool insertPoint(Treenode**, Point*, Treenode*, bool);
+bool insertPoint(Treenode**, Point*, Treenode*, bool, bool);
 bool findPoint(Treenode*, Point*);
+Treenode* delPoint(Treenode*, Treenode*);
 void printtabs(int);
 void printTreeRec(Treenode*, int);
 void printTree(Treenode*);

@@ -7,18 +7,26 @@
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Points 2D
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-Point *createPoint(float x, float y, int value) {
+Point *createPoint(float x, float y) {
 	Point *result = malloc(sizeof(Point));
 	if (result != NULL) {
 		result->x = x;
 		result->y = y;
-		result->value = value;
+		result->value = 0;
+		//result->segment= NULL;
 	}
 	return result;
 }
 
 void printPoint(Point *p) {
 	printf("Point = (%f, %f), value = %d\n", p->x, p->y, p->value);
+}
+
+bool equalPoint(Point *p1, Point *p2){
+	if(p1 != NULL && p2 != NULL){
+		return (p1->x == p2->x && p1->y == p2->y);
+	}
+	return false;
 }
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Segments

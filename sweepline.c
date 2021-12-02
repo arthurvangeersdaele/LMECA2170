@@ -3,9 +3,9 @@
 #include <stdbool.h>
 #include <time.h>
 #include "geometry.h"
-#include "tree.h"
+#include "point_tree.h"
+#include "segment_tree.h"
 #include "sweepline.h"
-
 
 NULL findNewEvent(Segment *sL, Segment *sR, Point *p){
 	if()
@@ -21,13 +21,20 @@ NULL FindIntersections(Segment s[]){ //<- list of segments
 	// 3 - creer l'arbre Q avec tous les points
 	Treenode *Q = createNode(NULL);
 	for(int i = 0; i < sizeof(s); i++){
-		Point upper = s[i].p0;
-		Point lower = s[i].p1;
-		insertPoint(&Q, &upper); // <- update si p0 already dans le tree
-		insertPoint(&Q, &lower);
+		insertPoint(&Q, &(s[i].p0), &Q, true, false); // <- update si p0 already dans le tree
+		insertPoint(&Q, &(s[i].p1), &Q, false, false);
+	}
+
+	// attribution des seg a leur upper
+	
+	for(int i = 0; i <sizeof(s); i++){
+
 	}
 
 	Treenode *Tau = createNode(NULL); // tous les points qui sont sur L (sweepline)
 	//check all point which y <line 
 	// is their p1 lower ? 
+	free(upper);
+	free(lower);
+	free(Q);
 }

@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-//#include "test.h"
-#include "tree.h"
 #include "geometry.h"
+#include "point_tree.h"
+#include "segment_tree.h"
 
 int main() {
 	/*Point p;
@@ -27,7 +27,6 @@ int main() {
 	free(tree);
 	*/
 	
-	
 	int length = 9;
 	//liste = (int*)malloc(sizeof(int)*1);
 	int liste[] = {5, 2, 8, 1, 3, 6, 10, 7, 9};
@@ -39,6 +38,13 @@ int main() {
 	}
 	checkTree(tree);
 	printTree(tree);
+
+	for(int i = 1; i<=9; i++){
+		tree = delPoint(tree, tree);
+	}
+
+	printTree(tree);
+	
 	free(tree);
 	free(p);
 	
