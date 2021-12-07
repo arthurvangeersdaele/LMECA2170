@@ -69,21 +69,22 @@ bool findPoint(Treenode *root, Point *p) {
 	}
 }
 
-/*Treenode* delPoint(Treenode *root, Treenode *head){
+Treenode* delPoint(Treenode *root, Treenode *head){
 	if(root == NULL){return head;}
 	if(root->left != NULL){
 		head = delPoint(root->left, head);
 	}
 	else{
 		if(root->parent != NULL){
-			if(root->parent != NULL && root->right != NULL){
-				root->parent->left = root->right;
-				root->right->parent = root->parent;
+			if(root->parent->parent != NULL && root->parent->right != NULL){
+				root->parent->parent->left = root->parent->right;
+				root->parent->right->parent = root->parent->parent;
+				free(root->parent);
 				free(root);
 				return head;
 			}
-			else if(root->parent== NULL && root->right != NULL){
-				head = root->right;
+			else if(root->parent->parent == NULL && root->parent->right != NULL){
+				head = root->parent->right;
 				head->parent = NULL;
 				return head;
 			}
@@ -96,42 +97,6 @@ bool findPoint(Treenode *root, Point *p) {
 	}
 	return head;
 }
-*/
-Point* delPoint(Treenode **root){
-	if(*root == NULL){return (*root)->value;}
-	if((*root)->left != NULL){
-		delPoint(&((*root)->left));
-	}
-	else{
-		//if(root->parent != NULL){
-			if((*root)->parent != NULL && (*root)->right != NULL){
-				Point *p = malloc(sizeof(Point));
-				p = (*root)->value;
-				(*root)->right->parent = (*root)->parent;
-				(*root)->parent->left = (*root)->right;
-				return p;
-			}
-			if((*root)->parent != NULL && (*root)->right == NULL){
-				Point *p = malloc(sizeof(Point));
-				p = (*root)->value;
-				(*root)->parent->left = NULL;
-				return p;
-			}
-			else if((*root)->parent== NULL && (*root)->right != NULL){
-				Point *p = malloc(sizeof(Point));
-				p = (*root)->value; 
-				(*root) = (*root)->right;
-				(*root)->parent = NULL;
-				return p;
-			}
-			else {
-				return (*root)->value;
-			}
-		
-	}
-	return (*root)->value;
-}
-
 
 bool checkTree(Treenode* root){
 	if(root != NULL){

@@ -61,9 +61,6 @@ Segment createSegment(Point *p0, Point *p1, int value) {
 	return *s;
 }
 
-bool equalSegment(Segment* s0, Segment* s1){
-	return(equalPoint(s0->p1, s1->p1) && equalPoint(s0->p0, s1->p0));
-}
 /*Segment checkSegment(Segment *s, int value) {
 	Segment* result = malloc(sizeof(Segment));
 	if (result != NULL) {

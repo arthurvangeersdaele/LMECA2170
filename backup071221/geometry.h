@@ -31,7 +31,7 @@ typedef struct Segment{
 
 Segment createSegment(Point*, Point*, int);
 Segment checkSegment(Segment*, int);
-bool equalSegment(Segment*, Segment*);
+
 #endif
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

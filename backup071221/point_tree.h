@@ -4,8 +4,8 @@
 #include <time.h>
 #include "geometry.h"
 
-#ifndef POINT_TREE_H_
-#define POINT_TREE_H_
+#ifndef TREE_H_
+#define TREE_H_
 
 typedef struct Treenode {
 	Point *value;
@@ -19,8 +19,7 @@ Treenode *createNode(Point*);
 bool checkTree(Treenode*);
 bool insertPoint(Treenode**, Point*, Treenode*, bool, bool);
 bool findPoint(Treenode*, Point*);
-/*Treenode* delPoint(Treenode*, Treenode*);*/
-Point* delPoint(Treenode**);
+Treenode* delPoint(Treenode*, Treenode*);
 void printtabs(int);
 void printTreeRec(Treenode*, int);
 void printTree(Treenode*);

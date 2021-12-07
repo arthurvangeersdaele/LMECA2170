@@ -9,18 +9,17 @@
 
 typedef struct Treeseg {
 	Segment *value;
-	struct Treeseg *parent;
-	struct Treeseg *left;
-	struct Treeseg *right;
+	struct Treenode *parent;
+	struct Treenode *left;
+	struct Treenode *right;
 
 }Treeseg;
 
 Treeseg *createSeg(Segment*);
 //bool checkTree2(Treeseg*);
-bool insertSeg(Treeseg**, Point*, Segment*, Treeseg*, bool);
+bool insertSeg(Treeseg**, Segment*, Treeseg*, bool, bool);
 //bool findSeg(Treeseg*, Segment*);
-bool delSeg(Treeseg**, Segment*, Point*);
-Treeseg* findSeg(Treeseg*, Segment*, Point*);
-Treeseg* findRSeg(Treeseg*);
+Treeseg* delSeg(Treeseg*, Treeseg*);
+
 
 #endif

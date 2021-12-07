@@ -33,13 +33,14 @@ int main() {
 	Treenode *tree = NULL;
 	Point* p;
 	for(int i = 0; i<length; i++){
-		p = createPoint(liste[i], 0);
-		insertPoint(&tree, p, tree, false, false);
+		p = createPoint(liste[i], 0, liste[i]);
+		insertPoint(&tree, p, tree, false);
 	}
+	checkTree(tree);
 	printTree(tree);
 
 	for(int i = 1; i<=9; i++){
-		p = delPoint(&tree);
+		tree = delPoint(tree, tree);
 	}
 
 	printTree(tree);
