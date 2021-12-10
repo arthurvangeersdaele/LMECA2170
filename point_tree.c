@@ -5,8 +5,8 @@
 #include "geometry.h"
 #include "point_tree.h"
 
-// create a simple node
-Treenode *createNode(Point *p) {
+
+Treenode *createNode(Point *p) { // create a simple node
 	Treenode* result = malloc(sizeof(Treenode));
 	if (result != NULL) {
 		result->parent = NULL;
@@ -17,48 +17,43 @@ Treenode *createNode(Point *p) {
 	return result;
 }
 
-bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent, bool upper, bool b) {
+bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent, bool upper, bool b) { // insert a point p in the tree; upper means that p is an upper point of some segment
 	Treenode *root = *rootptr;
-	if (root == NULL) {
+	if (root == NULL) { // if the tree is empty we just add the point
 		(*rootptr) = createNode(p);
-		if(upper){
+		if(upper){ // if p is some upper point we need to add the segment to its U list
 			(*rootptr)->value->value++;
 		}
-		if (parent != NULL){
+		if (parent != NULL){ // initialize the parent node
 			(*rootptr)->parent = parent;
 		}
-		else{
+		else{ // first node to be created: this node has no parent
 			(*rootptr)->parent = NULL;
 		}
 		return true;
 	}
-	if (p->x == root->value->x && p->y == root->value->y) {
-		if(upper){
+	if (p->x == root->value->x && p->y == root->value->y) { // if the point is already in the tree we do not add it again
+		if(upper){ // if p is some upper point we need to add the segment to its U list
 			(*rootptr)->value->value++;
-		}
-		if (b){
-			(*rootptr) = createNode(p);
-			(*rootptr)->parent = parent;
-			return true;
 		}
 		else{
 			return false;
 		}
 	}
-	if (p->y < root->value->y || (p->y == root->value->y && p->x < root->value->x)) {
+	if (p->y < root->value->y || (p->y == root->value->y && p->x < root->value->x)) { // add p to the left if p is above the current root or on same height but to the left (ie sweep line will first visit p then root)
 		return insertPoint(&(root->left), p, root, upper, b);
 	}
-	else {
+	else { // go right
 		return insertPoint(&(root->right), p, root, upper, b);
 	}
 }
 
-// find a given value for the points in the tree
-bool findPoint(Treenode *root, Point *p) {
+
+bool findPoint(Treenode *root, Point *p) { // return true if p is in the tree (root)
 	if (root == NULL) {
 		return false;
 	}
-	if (p->x == root->value->x && p->y == root->value->y) {
+	if (equalPoint(p, root->value)) {
 		return true;
 	}
 	if (p->y < root->value->y || (p->y == root->value->y && p->x < root->value->x)) {
@@ -69,70 +64,45 @@ bool findPoint(Treenode *root, Point *p) {
 	}
 }
 
-/*Treenode* delPoint(Treenode *root, Treenode *head){
-	if(root == NULL){return head;}
-	if(root->left != NULL){
-		head = delPoint(root->left, head);
+
+Point* delPoint(Treenode **root){ // Delete the point the most on the left of the tree root and return that point
+	if(*root == NULL){// the tree is empty
+		return (*root)->value;
 	}
-	else{
-		if(root->parent != NULL){
-			if(root->parent != NULL && root->right != NULL){
-				root->parent->left = root->right;
-				root->right->parent = root->parent;
-				free(root);
-				return head;
-			}
-			else if(root->parent== NULL && root->right != NULL){
-				head = root->right;
-				head->parent = NULL;
-				return head;
-			}
-			else {
-				free(head);
-				free(root);
-				return NULL;
-			}
-		}
-	}
-	return head;
-}
-*/
-Point* delPoint(Treenode **root){
-	if(*root == NULL){return (*root)->value;}
-	if((*root)->left != NULL){
+	if((*root)->left != NULL){// go on the left if possible
 		delPoint(&((*root)->left));
 	}
-	else{
-		//if(root->parent != NULL){
-			if((*root)->parent != NULL && (*root)->right != NULL){
-				Point *p = malloc(sizeof(Point));
-				p = (*root)->value;
-				(*root)->right->parent = (*root)->parent;
-				(*root)->parent->left = (*root)->right;
-				return p;
-			}
-			if((*root)->parent != NULL && (*root)->right == NULL){
-				Point *p = malloc(sizeof(Point));
-				p = (*root)->value;
-				(*root)->parent->left = NULL;
-				return p;
-			}
-			else if((*root)->parent== NULL && (*root)->right != NULL){
-				Point *p = malloc(sizeof(Point));
-				p = (*root)->value; 
-				(*root) = (*root)->right;
-				(*root)->parent = NULL;
-				return p;
-			}
-			else {
-				return (*root)->value;
-			}
+	else{// we have reach the point
+		if((*root)->parent != NULL && (*root)->right != NULL){ // link the parent of the node with its right child
+			Point *p = malloc(sizeof(Point));
+			p = (*root)->value;
+			(*root)->right->parent = (*root)->parent;
+			(*root)->parent->left = (*root)->right;
+			return p;
+		}
+		if((*root)->parent != NULL && (*root)->right == NULL){ // the parent of the node is now a leaf
+			Point *p = malloc(sizeof(Point));
+			p = (*root)->value;
+			(*root)->parent->left = NULL;
+			return p;
+		}
+		else if((*root)->parent== NULL && (*root)->right != NULL){ // the right child becomes the upper parent of the tree
+			Point *p = malloc(sizeof(Point));
+			p = (*root)->value; 
+			(*root) = (*root)->right;
+			(*root)->parent = NULL;
+			return p;
+		}
+		else { // the point is the only node remaining in the tree
+			return (*root)->value;
+		}
 		
 	}
 	return (*root)->value;
 }
 
 
+/*
 bool checkTree(Treenode* root){
 	if(root != NULL){
 		if(root-> left != NULL){
@@ -157,7 +127,8 @@ bool checkTree(Treenode* root){
 		}
 	}
 	return false; 
-}
+}*/
+
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Tree Print functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
