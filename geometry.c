@@ -18,16 +18,21 @@ Point *createPoint(float x, float y) {
 	return result;
 }
 
-void printPoint(Point *p) {
-	printf("Point = (%f, %f), value = %d\n", p->x, p->y, p->value);
-}
-
 bool equalPoint(Point *p1, Point *p2){
 	if(p1 != NULL && p2 != NULL){
 		return (p1->x == p2->x && p1->y == p2->y);
 	}
 	return false;
 }
+
+void printPoint(Point *p) {
+	if (p != NULL){
+		printf("Point = (%.2f, %.2f), v:%d\n", p->x, p->y, p->value);
+	}else{
+		printf("Point = NULL\n");
+	}
+}
+
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -41,7 +46,7 @@ bool equalPoint(Point *p1, Point *p2){
 	return *result;
 }*/
 
-Segment createSegment(Point *p0, Point *p1, int value) {
+Segment *createSegment(Point *p0, Point *p1, int value) {
 	Segment *s = malloc(sizeof(Segment));
 	if (s != NULL) {
 		if (p0->y < p1->y) {
@@ -58,30 +63,36 @@ Segment createSegment(Point *p0, Point *p1, int value) {
 		}
 		s->value = value;
 	}
-	return *s;
+	return s;
 }
 
 bool equalSegment(Segment* s0, Segment* s1){
 	return(equalPoint(s0->p1, s1->p1) && equalPoint(s0->p0, s1->p0));
 }
-/*Segment checkSegment(Segment *s, int value) {
-	Segment* result = malloc(sizeof(Segment));
-	if (result != NULL) {
-		if (s->p0->y < s->p1->y) {
-			result->p0 = s->p0;
-			result->p1= s->p1;
-		}
-		else if (s->p0->y == s->p1->y && s->p0->x < s->p1->x) {
-			result->p0 = s->p0;
-			result->p1 = s->p1;
-		}
-		else if (s->p0->y > s->p1->y) {
-			result->p0 = s->p1;
-			result->p1 = s->p0;
-		}
-		result->value = value;
-		*s = *result; 
-		free(result);
+
+void printSeg(Segment *s) {
+	if (s!=NULL){
+		printf("Seg = (%.2f,%.2f)->(%.2f,%.2f), v:%d\n", s->p0->x, s->p0->y, s->p1->x, s->p1->y, s->value);
 	}
-	return *s;
-}*/
+	else{
+		printf("Seg = NULL\n");
+	}
+}
+
+
+bool contains(Point* p, Segment* s){
+	float m;
+	float oao;
+	if(s != NULL){
+		if(s->p0->x != s->p1->x){ // pas vertical
+			m = (s->p0->y - s->p1->y)/(s->p0->x - s->p1->x);
+			oao = s->p0->y - m * s->p0->x;
+			return p->y == m*p->x + oao && p->y > s->p0->y && p->y < s->p1->y;
+		}
+		else{
+			return p->x == s->p0->x && p->y > s->p0->y && p->y < s->p1->y;
+		}
+
+	}
+	return false;
+}

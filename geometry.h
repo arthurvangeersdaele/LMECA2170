@@ -17,8 +17,8 @@ typedef struct Point{
 } Point;
 
 Point *createPoint(float, float);
-void printPoint(Point *p);
 bool equalPoint(Point*, Point*);
+void printPoint(Point *p);
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Segments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
@@ -29,11 +29,14 @@ typedef struct Segment{
 	int value;
 } Segment;
 
-Segment createSegment(Point*, Point*, int);
+Segment *createSegment(Point*, Point*, int);
 Segment checkSegment(Segment*, int);
 bool equalSegment(Segment*, Segment*);
-#endif
+void printSeg(Segment *s);
+
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+bool contains(Point*, Segment*);
+#endif

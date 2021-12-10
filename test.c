@@ -27,7 +27,7 @@ int main() {
 	free(tree);
 	*/
 	
-	int length = 9;
+	/*int length = 9;
 	//liste = (int*)malloc(sizeof(int)*1);
 	int liste[] = {5, 2, 8, 1, 3, 6, 10, 7, 9};
 	Treenode *tree = NULL;
@@ -45,8 +45,50 @@ int main() {
 	printTree(tree);
 	
 	free(tree);
-	free(p);
+	free(p);*/
 	
+
+	Treeseg *tree = NULL;
+
 	
+
+
+	Segment* s;
+	Point* p1;
+	Point* p2; 
+	int length = 4;
+	float liste_x1[] = {1.0, 1.4, 2.0, 3.0};
+	float liste_y1[] = {3.0, 2.0, 3.0, 1.0};
+	float liste_x2[] = {4.5, 3.5, 2.5, 0.75};
+	float liste_y2[] = {3.0, 5.5, 5.5, 5.5};
+
+	for(int i = 0; i < length; i++){
+		p1 = createPoint(liste_x1[i], liste_y1[i]);
+		p2 = createPoint(liste_x2[i], liste_y2[i]);
+		s = createSegment(p1, p2, i);
+		insertSeg(&tree, createPoint(2.0, 3.0), s, tree, false);
+		if(i == 0){
+			insertSeg(&tree, createPoint(0.6, 2.8), createSegment(createPoint(1.0, 2.0), createPoint(0.0, 4.0), -1), tree, false);
+		}
+	}
+	printTreeseg(tree);
+
+	/*int i = 0;
+	p1 = createPoint(liste_x1[i], liste_y1[i]);
+	p2 = createPoint(liste_x2[i], liste_y2[i]);
+	delSeg(&tree, createSegment(p1, p2, i), createPoint(2.0, 3.0));
+	printTreeseg(tree);*/
+
+	int i = 2;
+	p1 = createPoint(liste_x1[i], liste_y1[i]);
+	p2 = createPoint(liste_x2[i], liste_y2[i]);
+	// printSeg(findLeftNb(tree, createSegment(p1, p2, i), createPoint(2.0, 3.0)));
+	
+	printSeg(findRightNb(tree, createSegment(createPoint(1.0, 2.0), createPoint(0.0, 4.0), -1), createPoint(0.6, 2.8)));
+	
+	free(tree);
+	free(p1);
+	free(p2); 
+	free(s);
 }
 

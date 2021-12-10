@@ -16,11 +16,20 @@ typedef struct Treeseg {
 }Treeseg;
 
 Treeseg *createSeg(Segment*);
-//bool checkTree2(Treeseg*);
 bool insertSeg(Treeseg**, Point*, Segment*, Treeseg*, bool);
-//bool findSeg(Treeseg*, Segment*);
 bool delSeg(Treeseg**, Segment*, Point*);
-Treeseg* findSeg(Treeseg*, Segment*, Point*);
-Treeseg* findRSeg(Treeseg*);
 
+Treeseg* findSeg(Treeseg*, Segment*, Point*);
+
+Treeseg* findRSeg(Treeseg*);
+Treeseg* findLSeg(Treeseg*);
+Segment* findRParent(Treeseg*);
+Segment* findLParent(Treeseg*);
+Segment* findRightNb(Treeseg*, Segment*, Point*);
+Segment* findLeftNb(Treeseg*, Segment*, Point*);
+
+
+void printtabsseg(int);
+void printTreesegRec(Treeseg*, int);
+void printTreeseg(Treeseg*);
 #endif
