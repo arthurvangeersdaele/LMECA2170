@@ -69,6 +69,15 @@ void printSeg(Segment *s) {
 	}
 }
 
+void printSeg2(Segment *s) {
+	if (s!=NULL){
+		printf("Seg = (%.2f,%.2f)->(%.2f,%.2f), v:%d", s->p0->x, s->p0->y, s->p1->x, s->p1->y, s->value);
+	}
+	else{
+		printf("Seg = NULL");
+	}
+}
+
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

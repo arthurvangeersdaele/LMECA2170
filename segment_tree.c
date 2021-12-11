@@ -144,7 +144,7 @@ bool delSeg(Treeseg** root, Segment* seg, Point *p){ // delete the segment seg f
 						return true; 
 					}
 					else{
-						printf("error: my parents doesn't have children...\n";
+						printf("error: my parents doesn't have children...\n");
 						return false;
 					}
 				}

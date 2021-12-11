@@ -10,6 +10,7 @@
 typedef struct List{
 	struct Listseg *head;
 	struct Listseg *queue;
+	int length;
 }List;
 
 typedef struct Listseg {
@@ -20,11 +21,21 @@ typedef struct Listseg {
 }Listseg;
 
 Listseg *createListseg(Segment*);
+
+
+List *createVoidList();
 List *createList(Segment*);
+
 bool insertListHead(List*, Segment*);
 bool insertListQueue(List*, Segment*);
+
+bool delHead(List*);
+bool delQueue(List*);
 bool delList(List*, Segment*);
 bool delListRec(List*, Listseg*, Segment*);
+
 void printList(List*);
 void printListRec(Listseg*);
+void printListLight(List*);
+void printListLightRec(Listseg*);
 #endif
