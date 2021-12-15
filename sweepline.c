@@ -8,6 +8,10 @@
 #include "sweepline.h"
 
 NULL findNewEvent(Segment *sL, Segment *sR, Point *p){
+	// if sL and sR intersect below the sweep line, or on it and to the right of the current event point p, 
+	// and the intersection is not yet present as an event in Q
+	
+	// then insert the intersection point as an event into Q
 }
 
 NULL HandleEventPoint(Point *p, Treeseg* Tau){
