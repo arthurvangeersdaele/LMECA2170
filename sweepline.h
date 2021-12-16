@@ -7,22 +7,21 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "point.h"
-#include "segment.h"
+#include "geometry.h"
 #include "point_tree.h"
 #include "segment_tree.h"
-#include "segment_list.h"
 #include "point_list.h"
 
 
 //void delForC(Treeseg*, List*, Point*);
-void insertForC(Treeseg*, List*, Point*);
-void insertForU(Treeseg*, List*, Point*);
+void insertForC(Treeseg*, Listseg*, Point*);
+void insertForU(Treeseg*, Listseg*, Point*);
+void createQ(Listseg*, Treenode*);
 
 void findNewEvent(Segment*, Segment*, Point*, Treenode*);
 
-void HandleEventPoint(Point*, Point*, Point*);
+void HandleEventPoint(Point*, Treeseg*, ListP*, Treenode*);
 
-listP* FindIntersections(Segment*);
+ListP* FindIntersections(List*);
 
 #endif

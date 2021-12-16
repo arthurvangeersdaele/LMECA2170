@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "point.h"
-#include "segment_list.h"
+#include "geometry.h"
 #include "point_list.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CREATE A LIST NODE 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-Listpoint *createListpoint(Point* p){
+Listpoint* createListpoint(Point* p){
 	Listpoint* result = malloc(sizeof(Listpoint));
 	if (result != NULL) {
 		result->prev = NULL;
@@ -24,7 +23,7 @@ Listpoint *createListpoint(Point* p){
 %%% CREATE A LIST STRUCTURE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-ListP *createListP(Point* p){
+ListP* createListP(Point* p){
 	ListP* result = malloc(sizeof(ListP));
 	if (result != NULL) {
 		result->head = createListpoint(p);
@@ -33,7 +32,7 @@ ListP *createListP(Point* p){
 	}
 	return result;
 }
-ListP *createVoidListP(){
+ListP* createVoidListP(){
 	ListP* result = malloc(sizeof(ListP));
 	if (result != NULL) {
 		result->head = NULL;

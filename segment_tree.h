@@ -6,9 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "point.h"
-#include "segment.h"
-#include "segment_list.h"
+#include "geometry.h"
 
 
 typedef struct Treeseg {
@@ -24,14 +22,14 @@ bool insertSeg(Treeseg**, Point*, Segment*, Treeseg*);
 bool delSeg(Treeseg**, Segment*, Point*);
 
 //Treeseg* findSeg(Treeseg*, Segment*, Point*);
-Treeseg* findSegBEFOREUPDATE(Treeseg*, Segment*, Point*)
+Treeseg* findSegBEFOREUPDATE(Treeseg*, Segment*, Point*);
 
 Treeseg* findRSeg(Treeseg*);
 Treeseg* findLSeg(Treeseg*);
 Treeseg* findRParent(Treeseg*);
 Treeseg* findLParent(Treeseg*);
-Treeseg* findRightNb(Treeseg*, Segment*, Point*);
-Treeseg* findLeftNb(Treeseg*, Segment*, Point*);
+Treeseg* findRightNb(Treeseg*, Segment*, Point*, bool);
+Treeseg* findLeftNb(Treeseg*, Segment*, Point*, bool);
 
 bool findLandC(Treeseg*, Treeseg*, Point*, bool, List*, List*, List*);
 Segment* findLeftMost(Treeseg*, Treeseg*, Point*, bool);

@@ -2,11 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "point.h"
-#include "segment.h"
+#include "geometry.h"
 #include "point_tree.h"
 #include "segment_tree.h"
-#include "segment_list.h"
 #include "point_list.h"
 #include "sweepline.h"
 
@@ -19,19 +17,28 @@ void delForC(Treeseg* Tau, List* Ci, Point* p){
 	return;
 }*/
 
-void insertForC(Treeseg* Tau, List* Ci, Point* p){
-	if (Ci->head != NULL){
-		delSeg(&Tau, Ci->head->value, p);
-		insertSeg(&Tau, p, Ci->head->value, Tau);
+void insertForC(Treeseg* Tau, Listseg* Ci, Point* p){
+	if (Ci!= NULL){
+		delSeg(&Tau, Ci->value, p);
+		insertSeg(&Tau, p, Ci->value, Tau);
 		return insertForC(Tau, Ci->prev, p);
 	}
 	return;
 }
 
-void insertForU(Treeseg* Tau, List* Ui, Point* p){
-	if (Ui->head != NULL){
-		insertSeg(&Tau, p, Ui->head->value, Tau);
-		return delForC(Tau, Ui->prev, p);
+void insertForU(Treeseg* Tau, Listseg* Ui, Point* p){
+	if (Ui != NULL){
+		insertSeg(&Tau, p, Ui->value, Tau);
+		return insertForU(Tau, Ui->prev, p);
+	}
+	return;
+}
+
+void createQ(Listseg* s, Treenode* Q){
+	if (s != NULL){
+		insertPoint(&Q, s->value->p0, Q, s->value, true); // <- update si p0 already dans le tree
+		insertPoint(&Q, s->value->p1, Q, s->value, false);
+		return createQ(s->prev, Q);
 	}
 	return;
 }
@@ -76,7 +83,7 @@ void findNewEvent(Segment *sL, Segment *sR, Point *p, Treenode *Q){
 }
 
 
-void HandleEventPoint(Point *p, Treeseg* Tau, List*, listP* Inter, Treenode *Q){
+void HandleEventPoint(Point *p, Treeseg* Tau, ListP* Inter, Treenode *Q){
 	List* L = malloc(sizeof(List));
 	L = createVoidList();
 	
@@ -89,25 +96,25 @@ void HandleEventPoint(Point *p, Treeseg* Tau, List*, listP* Inter, Treenode *Q){
 	
 	findLandC(Tau, NULL, p, false, L, C, RLNeigh);
 		
-	if (p->U->length + L->lenght + C->length > 1){// p is an intersection point
-		insertListHeadP(Inter, p, concatenate(U, L, C));
+	if (p->U->length + L->length + C->length > 1){// p is an intersection point
+		insertListHeadP(Inter, p, concatenate(p->U, L, C));
 	}
 	
 	//Delete segment with p as lower point from the tree
-	for(int i=0; i<(L->lenght); i++){
+	for(int i=0; i<(L->length); i++){
 		delSeg(&Tau, L->head->value, p);
 		delHead(L);
 	}
 	//Delete and reinsert segment containing p from the tree (so they switch positions)
-	insertForC(Tau, C, p);
+	insertForC(Tau, C->head, p);
 	//Insert segment with p as upper point
-	insertForU(tau, U, p);
+	insertForU(Tau, p->U->head, p);
 	
 	
 	// Check for new intersections
 	if (p->U->length + C->length == 0){// p is only a lower point
 		if (RLNeigh->length == 2){// sl and sr exists
-			findNewEvent(RLNeigh->head->value, RLNeigh->queue->value, Q);
+			findNewEvent(RLNeigh->head->value, RLNeigh->queue->value, p, Q);
 		}
 	}else{
 		Segment* LeftMost = malloc(sizeof(Segment));
@@ -123,17 +130,17 @@ void HandleEventPoint(Point *p, Treeseg* Tau, List*, listP* Inter, Treenode *Q){
 		}
 		
 		if (LeftNeigh != NULL && LeftMost != NULL){
-			LeftNeigh = findLeftNb(Tau, LeftMost->value, p);
+			LeftNeigh = findLeftNb(Tau, LeftMost, p, true)->value;
 		}
 		if (RightNeigh != NULL && RightMost != NULL){
-			RightNeigh = findRightNb(Tau, RigtMost->value, p);
+			RightNeigh = findRightNb(Tau, RightMost, p, true)->value;
 		}
 		
 		if (LeftNeigh != NULL && LeftMost != NULL){
-			findNewEvent(LeftNeigh->value, LeftMost->value, Q);
+			findNewEvent(LeftNeigh, LeftMost, p, Q);
 		}
 		if (RightNeigh != NULL && RightMost != NULL){
-			findNewEvent(RightNeigh->value, RightMost->value, Q);
+			findNewEvent(RightNeigh, RightMost, p, Q);
 		}
 		
 	}
@@ -142,22 +149,19 @@ void HandleEventPoint(Point *p, Treeseg* Tau, List*, listP* Inter, Treenode *Q){
 }
 
 
-listP* FindIntersections(Segment s[]){ //<- list of segments 
+ListP* FindIntersections(List* s){ //<- list of segments 
 	// 1- checkSegment to sort segemnts -- ease process for Upper/Lower points (v)
 	// 2 - (p, list s) -> return s(starting = p)  <---- donner aux segment.value la valeur de Upper Point  <<< tous les points qui vont être dans l'arbre Q
 	// 3 - creer l'arbre Q avec tous les points
 	Treenode *Q = malloc(sizeof(Treenode));
 	Q = NULL;
-	for(int i = 0; i < sizeof(s); i++){
-		insertPoint(&Q, &(s[i].p0), &Q, s[i], true); // <- update si p0 already dans le tree
-		insertPoint(&Q, &(s[i].p1), &Q, s[i], false);
-	}
+	createQ(s->head, Q);
 
 
 	Treeseg *Tau = malloc(sizeof(Treeseg));
 	Tau = NULL; // tous les points qui sont sur L (sweepline)
 	
-	listP* Intersections = malloc(sizeof(listP));
+	ListP* Intersections = malloc(sizeof(ListP));
 	Intersections = createVoidListP();
 	
 	Point *p = malloc(sizeof(Point));
@@ -165,7 +169,7 @@ listP* FindIntersections(Segment s[]){ //<- list of segments
 	
 	while(Q != NULL){
 		p = delPoint(&Q);
-		HandleEventPoint(p, Tau);
+		HandleEventPoint(p, Tau, Intersections, Q);
 	}
 	//check all point which y <line 
 	// is their p1 lower ?

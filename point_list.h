@@ -6,8 +6,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "point.h"
-#include "segment_list.h"
+#include "geometry.h"
 
 
 typedef struct ListP{
@@ -20,17 +19,16 @@ typedef struct Listpoint {
 	Point *value;
 	struct Listpoint *prev;
 	struct Listpoint *next;
-	struct Listseg *luc;
-
+	struct List *luc;
 }Listpoint;
 
-Listseg *createListpoint(Point*);
+Listpoint* createListpoint(Point*);
 
 
-List *createVoidListP();
-List *createListP(Point*);
+ListP* createVoidListP();
+ListP* createListP(Point*);
 
-bool insertListHeadP(ListP*, Point*);
+bool insertListHeadP(ListP*, Point*, List*);
 bool insertListQueueP(ListP*, Point*);
 
 bool delHeadP(ListP*);
