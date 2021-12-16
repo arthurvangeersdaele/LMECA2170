@@ -1,12 +1,22 @@
 #include "BOV.h"
 #include <math.h>
+#include "geometry.h"
+#include "point_tree.h"
+#include "segment_tree.h"
+#include "segment_list.h"
+#include "point_list.h"
 
 #ifndef SWEEPLINE_H_
 #define SWEEPLINE_H_
-NULL findNewEvent(Segment *sL, Segment *sR, Point *p);
 
-NULL HandleEventPoint(Point *p1, Point *p2, Point *p3);
+//void delForC(Treeseg*, List*, Point*);
+void insertForC(Treeseg*, List*, Point*);
+void insertForU(Treeseg*, List*, Point*);
 
-NULL FindIntersections(Segment*);
+void findNewEvent(Segment*, Segment*, Point*, Treenode*);
+
+void HandleEventPoint(Point*, Point*, Point*);
+
+listP* FindIntersections(Segment*);
 
 #endif

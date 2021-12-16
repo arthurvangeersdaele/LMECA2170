@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include "geometry.h"
+#include "segment_list.h"
 
 #ifndef POINT_TREE_H_
 #define POINT_TREE_H_
@@ -17,7 +18,7 @@ typedef struct Treenode {
 
 Treenode *createNode(Point*);
 // bool checkTree(Treenode*);
-bool insertPoint(Treenode**, Point*, Treenode*, bool, bool);
+bool insertPoint(Treenode**, Point*, Treenode*, Segment*, bool);
 bool findPoint(Treenode*, Point*);
 Point* delPoint(Treenode**);
 

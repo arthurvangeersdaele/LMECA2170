@@ -4,16 +4,18 @@
 #include <time.h>
 #include "geometry.h"
 #include "segment_list.h"
+#include "point_list.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CREATE A LIST NODE 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-Listseg *createListseg(Segment* s){
-	Listseg* result = malloc(sizeof(Listseg));
+Listpoint *createListpoint(Point* p){
+	Listpoint* result = malloc(sizeof(Listpoint));
 	if (result != NULL) {
 		result->prev = NULL;
 		result->next = NULL;
-		result->value = s;
+		result->value = p;
+		result->luc = NULL; 
 	}
 	return result;
 }
@@ -22,17 +24,17 @@ Listseg *createListseg(Segment* s){
 %%% CREATE A LIST STRUCTURE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-List *createList(Segment* s){
-	List* result = malloc(sizeof(List));
+ListP *createListP(Point* p){
+	ListP* result = malloc(sizeof(ListP));
 	if (result != NULL) {
-		result->head = createListseg(s);
-		result->queue = createListseg(s);
+		result->head = createListpoint(p);
+		result->queue = createListpoint(p);
 		result->length = 0;
 	}
 	return result;
 }
-List *createVoidList(){
-	List* result = malloc(sizeof(List));
+ListP *createVoidListP(){
+	ListP* result = malloc(sizeof(ListP));
 	if (result != NULL) {
 		result->head = NULL;
 		result->queue = NULL;
@@ -45,22 +47,24 @@ List *createVoidList(){
 %%% ADD A SEGMENT IN LIST
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-bool insertListHead(List* list, Segment* s){
-	if(s == NULL){
-		printf("\nWarning: segment is NULL\n");
+bool insertListHeadP(ListP* list, Point* p, List* luc){
+	if(p == NULL){
+		printf("\nWarning: point is NULL\n");
 		return false;
 	}
 	if(list != NULL){
 		if(list->head != NULL){
 			if(list->length == 1){
-				list->queue = createListseg(list->queue->value);
-				list->head = createListseg(s);
+				list->queue = createListpoint(list->queue->value);
+				list->head = createListpoint(p);
+				list->head->luc = luc;
 				list->queue->next = list->head;
 				list->head->prev = list->queue; 
 				list->length += 1;
 			}
 			else{
-				list->head->next = createListseg(s);
+				list->head->next = createListpoint(p);
+				list->head->next->luc = luc;
 				list->head->next->prev = list->head;
 				list->head = list->head->next;
 				list->length+=1;
@@ -68,7 +72,8 @@ bool insertListHead(List* list, Segment* s){
 		}
 		else{
 			// printf("\nWarning: HEAD of List is NULL\n");
-			list->head = createListseg(s);
+			list->head = createListpoint(p);
+			list->head->luc = luc;
 			list->queue = list->head;
 			list->head->prev = list->queue;
 			list->queue->next = list->head;
@@ -81,22 +86,23 @@ bool insertListHead(List* list, Segment* s){
 	}
 }
 
-bool insertListQueue(List* list, Segment* s){
-	if(s == NULL){
-		printf("\nWarning: segment is NULL\n");
+// pas de luc gestion !!!! 
+bool insertListQueueP(ListP* list, Point* p){
+	if(p == NULL){
+		printf("\nWarning: point is NULL\n");
 		return false;
 	}
 	if(list != NULL){
 		if(list->queue != NULL){
 			if(list->length == 1){
-				list->queue = createListseg(s);
-				list->head = createListseg(list->head->value);
+				list->queue = createListpoint(p);
+				list->head = createListpoint(list->head->value);
 				list->queue->next = list->head;
 				list->head->prev = list->queue; 
 				list->length += 1;
 			}
 			else{
-				list->queue->prev = createListseg(s);
+				list->queue->prev = createListpoint(p);
 				list->queue->prev->next = list->queue;
 				list->queue = list->queue->prev;
 				list->length+=1;
@@ -104,7 +110,7 @@ bool insertListQueue(List* list, Segment* s){
 		}
 		else{
 			// printf("\nWarning: QUEUE of List is NULL\n");
-			list->queue = createListseg(s);
+			list->queue = createListpoint(p);
 			list->head = list->queue;
 			list->head->prev = list->queue;
 			list->queue->next = list->head;
@@ -122,7 +128,7 @@ bool insertListQueue(List* list, Segment* s){
 %%% DELETE A SEGMENT IN LIST
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 
-bool delHead(List* list){
+bool delHeadP(ListP* list){
 	if(list->length == 0){
 		// printf("\nWarning: list is empty\n");
 		return false;
@@ -141,7 +147,7 @@ bool delHead(List* list){
 	}
 }
 
-bool delQueue(List* list){
+bool delQueueP(ListP* list){
 	if(list->length == 0){
 		// printf("\nWarning: list is empty\n");
 		return false;
@@ -161,37 +167,37 @@ bool delQueue(List* list){
 }
 
 
-bool delList(List* list, Segment* s){
+bool delListP(ListP* list, Point* p){
 	if(list->length == 1){
 		list->head = NULL;
 		list->queue = NULL;
 		list->length = 0;
 		return true; 
 	}
-	return delListRec(list, list->queue, s);
+	return delListRecP(list, list->queue, p);
 }
 
-bool delListRec(List* list, Listseg* node, Segment* s){
-	if(equalSegment(list->queue->value, s)){
+bool delListRecP(ListP* list, Listpoint* node, Point* p){
+	if(equalPoint(list->queue->value, p)){
 		list->queue->next->prev = NULL;
 		list->queue = list->queue->next;
 		list->length-=1;
 		return true;
 	}
-	else if(equalSegment(list->head->value, s)){
+	else if(equalPoint(list->head->value, p)){
 		list->head->prev->next= NULL;
 		list->head = list->head->prev;
 		list->length-=1;
 		return true; 
 	}
-	else if(equalSegment(node->value, s)){
+	else if(equalPoint(node->value, p)){
 		node->prev->next = node->next; 
 		node->next->prev = node->prev;
 		list->length-=1;
 		return true; 
 	}
 	else if(node->next != NULL){
-		delListRec(list, node->next, s);
+		delListRecP(list, node->next, p);
 	}
 	else{
 		// printf("\nSegment is not in list\n");
@@ -200,37 +206,10 @@ bool delListRec(List* list, Listseg* node, Segment* s){
 }
 
 
-List* concatenate(List* l1, List* l2, List* l3){
-	return concatenate2(concatenate2(l1, l2), l3);
-}
-
-List* concatenate2(List* l1, List* l2){
-	if(l1 != NULL && l1->head != NULL && l1->queue != NULL){
-		if(l2 != NULL && l2->head != NULL && l2->queue != NULL){
-			List* tmp = createVoidList();
-			tmp->head = l1->head; 
-			tmp->queue = l2->queue; 
-			l1->queue->next = l2->head;
-			l2->head->prev = l1->queue;
-			free(l1); 
-			free(l2); 
-			return tmp;
-		}
-		else{ // l2 == NULL
-			free(l2); 
-			return l1;
-		}
-	}
-	else{ // l1 == NULL
-		free(l1);
-		return l2;
-	}
-}
-
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PRINT LIST FUNCTIONS 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-void printList(List* list){
+void printListP(ListP* list){
 	if(list == NULL){
 		printf("\nList is NULL\n");
 		return;
@@ -240,52 +219,23 @@ void printList(List* list){
 	}
 	else if(list->length == 1){
 		printf("\n<QUEUE> :[]:[");
-		printSeg2(list->queue->value);
+		printPoint(list->queue->value);
 		printf("]:[]: <head>\n");
 	}
 	else {
 		printf("\n<QUEUE> :[]:[");
-		printListRec(list->queue);
+		printListRecP(list->queue);
 	}
 }
 
-void printListRec(Listseg* node){
+void printListRecP(Listpoint* node){
 	if(node != NULL){
-		printSeg2(node->value);
+		printPoint(node->value);
 		printf("]:[");
-		printListRec(node->next);
+		printListRecP(node->next);
 	}
 	else{
 		printf("]: <HEAD>\n\n");
 	}
 }
 
-void printListLight(List* list){
-	if(list == NULL){
-		printf("\nObject List is NULL\n");
-		return;
-	}
-	else if(list->length == 0){
-		printf("\n[0] <Q><H> (empty)\n");
-	}
-	else if(list->length == 1){
-		printf("\n[1] <Q> ");
-		printf("%d", list->queue->value->value);
-		printf(" <H>\n");
-	}
-	else {
-		printf("\n[%d] <Q> ", list->length);
-		printListLightRec(list->queue);
-	}
-}
-
-void printListLightRec(Listseg* node){
-	if(node != NULL){
-		printf("%d", node->value->value);
-		printf(" - ");
-		printListLightRec(node->next);
-	}
-	else{
-		printf("<H>\n");
-	}
-}

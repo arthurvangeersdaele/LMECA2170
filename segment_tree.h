@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include "geometry.h"
+#include "segment_list.h"
 
 #ifndef SEGMENT_TREE_H_
 #define SEGMENT_TREE_H_
@@ -16,18 +17,22 @@ typedef struct Treeseg {
 }Treeseg;
 
 Treeseg *createSeg(Segment*);
-bool insertSeg(Treeseg**, Point*, Segment*, Treeseg*, bool);
+bool insertSeg(Treeseg**, Point*, Segment*, Treeseg*);
 bool delSeg(Treeseg**, Segment*, Point*);
 
-Treeseg* findSeg(Treeseg*, Segment*, Point*);
+//Treeseg* findSeg(Treeseg*, Segment*, Point*);
+Treeseg* findSegBEFOREUPDATE(Treeseg*, Segment*, Point*)
 
 Treeseg* findRSeg(Treeseg*);
 Treeseg* findLSeg(Treeseg*);
-Segment* findRParent(Treeseg*);
-Segment* findLParent(Treeseg*);
-Segment* findRightNb(Treeseg*, Segment*, Point*);
-Segment* findLeftNb(Treeseg*, Segment*, Point*);
+Treeseg* findRParent(Treeseg*);
+Treeseg* findLParent(Treeseg*);
+Treeseg* findRightNb(Treeseg*, Segment*, Point*);
+Treeseg* findLeftNb(Treeseg*, Segment*, Point*);
 
+bool findLandC(Treeseg*, Treeseg*, Point*, bool, List*, List*, List*);
+Segment* findLeftMost(Treeseg*, Treeseg*, Point*, bool);
+Segment* findRightMost(Treeseg*, Treeseg*, Point*, bool);
 
 void printtabsseg(int);
 void printTreesegRec(Treeseg*, int);

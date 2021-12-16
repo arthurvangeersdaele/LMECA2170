@@ -34,8 +34,12 @@ bool delQueue(List*);
 bool delList(List*, Segment*);
 bool delListRec(List*, Listseg*, Segment*);
 
+List* concatenate(List*, List*, List*);
+List* concatenate2(List*, List*);
+
 void printList(List*);
 void printListRec(Listseg*);
 void printListLight(List*);
 void printListLightRec(Listseg*);
+
 #endif

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include "geometry.h"
+#include "segment_list.h"
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Points 2D
@@ -12,8 +13,7 @@ Point *createPoint(float x, float y) {
 	if (result != NULL) {
 		result->x = x;
 		result->y = y;
-		result->value = 0;
-		//result->segment= NULL;
+		result->U = createVoidList();
 	}
 	return result;
 }

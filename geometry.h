@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include "segment_list.h"
+
 
 #ifndef GEOMETRY_H_
 #define GEOMETRY_H_
@@ -9,10 +11,10 @@
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Points
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-typedef struct Point{
+typedef struct Point{S
 	float x;
 	float y;
-	int value;
+	List* U;
 	//Segment* segments;
 } Point;
 

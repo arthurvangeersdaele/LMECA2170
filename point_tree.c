@@ -4,6 +4,7 @@
 #include <time.h>
 #include "geometry.h"
 #include "point_tree.h"
+#include "segment_list.h"
 
 
 Treenode *createNode(Point *p) { // create a simple node
@@ -17,12 +18,12 @@ Treenode *createNode(Point *p) { // create a simple node
 	return result;
 }
 
-bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent, bool upper, bool b) { // insert a point p in the tree; upper means that p is an upper point of some segment
+bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent, Segment* s, bool upper) { // insert a point p in the tree; upper means that p is an upper point of some segment
 	Treenode *root = *rootptr;
 	if (root == NULL) { // if the tree is empty we just add the point
 		(*rootptr) = createNode(p);
 		if(upper){ // if p is some upper point we need to add the segment to its U list
-			(*rootptr)->value->value++;
+			insertListHead((*rootptr)->value->U, s);
 		}
 		if (parent != NULL){ // initialize the parent node
 			(*rootptr)->parent = parent;
@@ -34,7 +35,7 @@ bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent, bool upper, boo
 	}
 	if (p->x == root->value->x && p->y == root->value->y) { // if the point is already in the tree we do not add it again
 		if(upper){ // if p is some upper point we need to add the segment to its U list
-			(*rootptr)->value->value++;
+			insertListHead((*rootptr)->value->U, s);
 		}
 		else{
 			return false;
