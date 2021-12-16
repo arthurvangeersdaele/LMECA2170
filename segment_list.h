@@ -1,11 +1,13 @@
+#ifndef SEGMENT_LIST_H_
+#define SEGMENT_LIST_H_
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "geometry.h"
+#include "segment.h"
 
-#ifndef SEGMENT_LIST_H_
-#define SEGMENT_LIST_H_
 
 typedef struct List{
 	struct Listseg *head;

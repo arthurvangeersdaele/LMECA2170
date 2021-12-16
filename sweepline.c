@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "geometry.h"
+#include "point.h"
+#include "segment.h"
 #include "point_tree.h"
 #include "segment_tree.h"
-#include "sweepline.h"
 #include "segment_list.h"
 #include "point_list.h"
+#include "sweepline.h"
 
 /*
 void delForC(Treeseg* Tau, List* Ci, Point* p){

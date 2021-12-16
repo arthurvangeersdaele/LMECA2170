@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "geometry.h"
-#include "segment_tree.h"
+#include "point.h"
+#include "segment.h"
 #include "segment_list.h"
+#include "segment_tree.h"
 
 Treeseg *createSeg(Segment *s) {
 	Treeseg* result = malloc(sizeof(Treeseg));

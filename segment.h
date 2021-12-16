@@ -1,26 +1,12 @@
+#ifndef SEGMENT_H_
+#define SEGMENT_H_
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "segment_list.h"
-
-
-#ifndef GEOMETRY_H_
-#define GEOMETRY_H_
-
-/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% Points
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-typedef struct Point{S
-	float x;
-	float y;
-	List* U;
-	//Segment* segments;
-} Point;
-
-Point *createPoint(float, float);
-bool equalPoint(Point*, Point*);
-void printPoint(Point *p);
+#include "point.h"
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,4 +29,5 @@ void printSeg2(Segment *s);
 %%% POINTS & SEGMENTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 bool contains(Point*, Segment*);
+
 #endif

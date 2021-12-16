@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "geometry.h"
-#include "point_tree.h"
+#include "point.h"
+#include "segment.h"
 #include "segment_list.h"
+#include "point_tree.h"
 
 
 Treenode *createNode(Point *p) { // create a simple node
@@ -42,10 +43,10 @@ bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent, Segment* s, boo
 		}
 	}
 	if (p->y < root->value->y || (p->y == root->value->y && p->x < root->value->x)) { // add p to the left if p is above the current root or on same height but to the left (ie sweep line will first visit p then root)
-		return insertPoint(&(root->left), p, root, upper, b);
+		return insertPoint(&(root->left), p, root, s, upper);
 	}
 	else { // go right
-		return insertPoint(&(root->right), p, root, upper, b);
+		return insertPoint(&(root->right), p, root, s, upper);
 	}
 }
 

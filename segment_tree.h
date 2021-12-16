@@ -1,12 +1,15 @@
+#ifndef SEGMENT_TREE_H_
+#define SEGMENT_TREE_H_
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "geometry.h"
+#include "point.h"
+#include "segment.h"
 #include "segment_list.h"
 
-#ifndef SEGMENT_TREE_H_
-#define SEGMENT_TREE_H_
 
 typedef struct Treeseg {
 	Segment *value;

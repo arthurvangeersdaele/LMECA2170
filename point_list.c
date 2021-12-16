@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "geometry.h"
+#include "point.h"
 #include "segment_list.h"
 #include "point_list.h"
 
