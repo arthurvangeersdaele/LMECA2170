@@ -36,6 +36,9 @@ bool delQueueP(ListP*);
 bool delListP(ListP*, Point*);
 bool delListRecP(ListP*, Listpoint*, Point*);
 
+void freeListP(ListP*);
+void freeListpoint(Listpoint*);
+
 void printListP(ListP*);
 void printListRecP(Listpoint*);
 

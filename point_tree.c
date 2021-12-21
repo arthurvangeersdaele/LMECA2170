@@ -12,7 +12,7 @@ Treenode *createNode(Point *p) { // create a simple node
 		result->parent = NULL;
 		result->left = NULL;
 		result->right = NULL;
-		result->value = p;
+		result->value = createPoint(p->x, p->y, p->U);
 	}
 	return result;
 }
@@ -32,13 +32,11 @@ bool insertPoint(Treenode **rootptr, Point* p, Treenode *parent, Segment* s, boo
 		}
 		return true;
 	}
-	if (p->x == root->value->x && p->y == root->value->y) { // if the point is already in the tree we do not add it again
+	if (equalPointTOL(root->value, p)) { // if the point is already in the tree we do not add it again
 		if(upper){ // if p is some upper point we need to add the segment to its U list
 			insertListHead((*rootptr)->value->U, s);
 		}
-		else{
-			return false;
-		}
+		return false;
 	}
 	if (p->y < root->value->y || (p->y == root->value->y && p->x < root->value->x)) { // add p to the left if p is above the current root or on same height but to the left (ie sweep line will first visit p then root)
 		return insertPoint(&(root->left), p, root, s, upper);
@@ -67,67 +65,64 @@ bool findPoint(Treenode *root, Point *p) { // return true if p is in the tree (r
 
 Point* delPoint(Treenode **root){ // Delete the point the most on the left of the tree root and return that point
 	if(*root == NULL){// the tree is empty
-		return (*root)->value;
+		return NULL;
 	}
 	if((*root)->left != NULL){// go on the left if possible
-		delPoint(&((*root)->left));
+		return delPoint(&((*root)->left));
 	}
 	else{// we have reach the point
 		if((*root)->parent != NULL && (*root)->right != NULL){ // link the parent of the node with its right child
-			Point *p = malloc(sizeof(Point));
-			p = (*root)->value;
-			(*root)->right->parent = (*root)->parent;
-			(*root)->parent->left = (*root)->right;
+            Point* p = createPoint((*root)->value->x, (*root)->value->y, (*root)->value->U);
+
+            Treenode *par = (*root)->parent;
+            Treenode *r = (*root)->right;
+
+            freePoint((*root)->value);
+            free(*root);
+
+            r->parent = par;
+			par->left = r;
 			return p;
 		}
 		if((*root)->parent != NULL && (*root)->right == NULL){ // the parent of the node is now a leaf
-			Point *p = malloc(sizeof(Point));
-			p = (*root)->value;
-			(*root)->parent->left = NULL;
+            Point* p = createPoint((*root)->value->x, (*root)->value->y, (*root)->value->U);
+            (*root)->parent->left = NULL;
+            freeTreenode(*root);
 			return p;
 		}
 		else if((*root)->parent== NULL && (*root)->right != NULL){ // the right child becomes the upper parent of the tree
-			Point *p = malloc(sizeof(Point));
-			p = (*root)->value; 
-			(*root) = (*root)->right;
+            Point *p = createPoint((*root)->value->x, (*root)->value->y, (*root)->value->U);
+
+            Treenode *r = (*root)->right;
+
+            freePoint((*root)->value);
+            free(*root);
+
+            (*root) = r;
 			(*root)->parent = NULL;
 			return p;
 		}
 		else { // the point is the only node remaining in the tree
-			return (*root)->value;
+            Point *p = createPoint((*root)->value->x, (*root)->value->y, (*root)->value->U);
+            freeTreenode(*root);
+            (*root) = NULL;
+            return p;
 		}
 		
 	}
-	return (*root)->value;
 }
 
 
-/*
-bool checkTree(Treenode* root){
-	if(root != NULL){
-		if(root-> left != NULL){
-			insertPoint(&root->left, root->value, root, false, true);
-			checkTree(root->left);
-			if (root->right != NULL){
-				if(root->right->left != NULL || root->right->right != NULL){
-					checkTree(root->right);
-				}
-			}
-			return true;
-		}
-		else{
-			root->left = createNode(root->value);
-			root->left->parent = root;
-			if (root->right != NULL){
-				if(root->right->left != NULL || root->right->right != NULL){
-					checkTree(root->right);
-				}
-			}
-			return true;
-		}
-	}
-	return false; 
-}*/
+void freeTreenode(Treenode* root){
+    if (root == NULL){
+        return;
+    }
+    freeTreenode(root->left);
+    freeTreenode(root->right);
+
+    freePoint(root->value);
+    free(root);
+}
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Tree Print functions

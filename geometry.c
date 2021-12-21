@@ -4,15 +4,30 @@
 #include <time.h>
 #include "geometry.h"
 
+
+bool feq(double x, double y){
+    return (y<x+tol && y>x-tol);
+}
+
+bool fgreater(double x, double y){
+    return (x > y-tol);
+}
+bool flower(double x, double y){
+    return (x < y-tol);
+}
+
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Points 2D
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-Point *createPoint(float x, float y) {
+Point *createPoint(double x, double y, List *U) {
 	Point *result = malloc(sizeof(Point));
 	if (result != NULL) {
 		result->x = x;
 		result->y = y;
-		result->U = createVoidList();
+        result->U = createVoidList();
+        if (U != NULL){
+            insertList(result->U, U->head);
+        }
 	}
 	return result;
 }
@@ -24,10 +39,24 @@ bool equalPoint(Point *p1, Point *p2){ // return true if the two points are equa
 	return false;
 }
 
+bool equalPointTOL(Point *p1, Point *p2){ // return true if the two points are equal (do not look at the value, only the coordinates)
+    if(p1 != NULL && p2 != NULL){
+        return (feq(p1->x, p2->x) && feq(p1->y, p2->y));
+    }
+    return false;
+}
+
+void freePoint(Point* p){
+    if(p != NULL){
+        freeList(p->U);
+        free(p);
+    }
+}
+
 void printPoint(Point *p) {
 	if (p != NULL){
 		printf("Point = (%.2f, %.2f)  ", p->x, p->y);
-		printList(p->U);
+        printList(p->U);
 	}else{
 		printf("Point = NULL\n");
 	}
@@ -40,17 +69,13 @@ void printPoint(Point *p) {
 Segment *createSegment(Point *p0, Point *p1, int value) { // Segments are such that P0 is the upper point of the segment and P1 is the lower point
 	Segment *s = malloc(sizeof(Segment));
 	if (s != NULL) {
-		if (p0->y < p1->y) {
-			s->p0 = p0;
-			s->p1= p1;
-		}
-		else if (p0->y == p1->y && p0->x < p1->x) {
-			s->p0 = p0;
-			s->p1 = p1;
+		if (p0->y < p1->y || (p0->y == p1->y && p0->x < p1->x)) {
+			s->p0 = createPoint(p0->x, p0->y, p0->U);
+			s->p1 = createPoint(p1->x, p1->y, p1->U);
 		}
 		else{
-			s->p0 = p1;
-			s->p1 = p0;
+			s->p0 = createPoint(p1->x, p1->y, p1->U);
+			s->p1 = createPoint(p0->x, p0->y, p0->U);
 		}
 		s->value = value;
 	}
@@ -58,8 +83,21 @@ Segment *createSegment(Point *p0, Point *p1, int value) { // Segments are such t
 }
 
 bool equalSegment(Segment* s0, Segment* s1){ // return true if the two segments are equal (do not look at the value, only the coordinates of the two points of the segments)
-	return(equalPoint(s0->p1, s1->p1) && equalPoint(s0->p0, s1->p0));
+	if (s0 != NULL && s1 != NULL){
+        return (s0->value == s1->value || (equalPoint(s0->p0, s1->p0) && equalPoint(s0->p1, s1->p1)));
+    }
+    return false;
 }
+
+
+void freeSeg(Segment* s){
+    if (s != NULL) {
+        freePoint(s->p0);
+        freePoint(s->p1);
+        free(s);
+    }
+}
+
 
 void printSeg(Segment *s) {
 	if (s!=NULL){
@@ -85,17 +123,17 @@ void printSeg2(Segment *s) {
 %%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 bool contains(Point* p, Segment* s){ // return true if the segment s contains the point p ON ITS INTERIOR
-	float m; // slope of the segment
-	float oao; // (imaginary) crossing of the segment with the y-axis
+	double m; // slope of the segment
+	double oao; // (imaginary) crossing of the segment with the y-axis
 	if(s != NULL){
 		if(s->p0->x != s->p1->x){ // s not vertical
 			m = (s->p0->y - s->p1->y)/(s->p0->x - s->p1->x);
 			oao = s->p0->y - m * s->p0->x;
 			// check if p is on the line y=mx+p and if it is between the two extremities of the segment
-			return p->y == m*p->x + oao && p->y > s->p0->y && p->y < s->p1->y;
+			return feq(p->y, m*p->x + oao) && p->y > s->p0->y && p->y < s->p1->y;
 		}
 		else{ // s is vertical: check if p is on the line with x-coordinates and between the segment extremities with y coordinates
-			return p->x == s->p0->x && p->y > s->p0->y && p->y < s->p1->y;
+			return feq(p->x, s->p0->x) && p->y > s->p0->y && p->y < s->p1->y;
 		}
 
 	}
@@ -116,7 +154,7 @@ Listseg *createListseg(Segment* s){
 	if (result != NULL) {
 		result->prev = NULL;
 		result->next = NULL;
-		result->value = s;
+		result->value = createSegment(s->p0, s->p1, s->value);
 	}
 	return result;
 }
@@ -129,8 +167,8 @@ List *createList(Segment* s){
 	List* result = malloc(sizeof(List));
 	if (result != NULL) {
 		result->head = createListseg(s);
-		result->queue = createListseg(s);
-		result->length = 0;
+		//result->queue = createListseg(s);
+		result->length = 1;
 	}
 	return result;
 }
@@ -150,13 +188,13 @@ List *createVoidList(){
 
 bool insertListHead(List* list, Segment* s){
 	if(s == NULL){
-		printf("\nWarning: segment is NULL\n");
+		//printf("\nWarning: segment is NULL\n");
 		return false;
 	}
 	if(list != NULL){
 		if(list->head != NULL){
 			if(list->length == 1){
-				list->queue = createListseg(list->queue->value);
+                list->queue = list->head;
 				list->head = createListseg(s);
 				list->queue->next = list->head;
 				list->head->prev = list->queue; 
@@ -168,20 +206,15 @@ bool insertListHead(List* list, Segment* s){
 				list->head = list->head->next;
 				list->length+=1;
 			}
+            return true;
 		}
 		else{
-			// printf("\nWarning: HEAD of List is NULL\n");
-			list->head = createListseg(s);
-			list->queue = list->head;
-			list->head->prev = list->queue;
-			list->queue->next = list->head;
+            list->head = createListseg(s);
 			list->length = 1;
 			return true;
 		}
 	}
-	else{
-		return false;
-	}
+    return false;
 }
 
 bool insertListQueue(List* list, Segment* s){
@@ -192,8 +225,8 @@ bool insertListQueue(List* list, Segment* s){
 	if(list != NULL){
 		if(list->queue != NULL){
 			if(list->length == 1){
+                list->head = list->queue;
 				list->queue = createListseg(s);
-				list->head = createListseg(list->head->value);
 				list->queue->next = list->head;
 				list->head->prev = list->queue; 
 				list->length += 1;
@@ -204,20 +237,24 @@ bool insertListQueue(List* list, Segment* s){
 				list->queue = list->queue->prev;
 				list->length+=1;
 			}
+            return true;
 		}
 		else{
-			// printf("\nWarning: QUEUE of List is NULL\n");
 			list->queue = createListseg(s);
-			list->head = list->queue;
-			list->head->prev = list->queue;
-			list->queue->next = list->head;
 			list->length = 1;
-			return false;
+			return true;
 		}
 	}
-	else{
-		return false;
-	}
+	return false;
+}
+
+
+bool insertList(List* l1, Listseg* l2){//length l2 must be >1
+    if (l2 != NULL){
+        insertListHead(l1, l2->value);
+        return insertList(l1, l2->prev);
+    }
+    return false;
 }
 
 
@@ -227,16 +264,18 @@ bool insertListQueue(List* list, Segment* s){
 
 bool delHead(List* list){
 	if(list->length == 0){
-		// printf("\nWarning: list is empty\n");
 		return false;
 	}
 	if(list->length == 1){
-		list->head = NULL;
-		list->queue = NULL;
-		list->length = 0;
+        //list->head = NULL;
+        //list->queue = NULL;
+        //list->length = 0;
+        freeList(list);
 		return true; 
 	}
 	else{
+        freeSeg(list->head->value);
+        free(list->head);
 		list->head = list->head->prev;
 		list->head->next = NULL;
 		list->length -=1;
@@ -244,90 +283,56 @@ bool delHead(List* list){
 	}
 }
 
-bool delQueue(List* list){
-	if(list->length == 0){
-		// printf("\nWarning: list is empty\n");
-		return false;
-	}
-	if(list->length == 1){
-		list->head = NULL;
-		list->queue = NULL;
-		list->length = 0;
-		return true; 
-	}
-	else{
-		list->queue = list->queue->next;
-		list->queue->prev = NULL;
-		list->length -=1;
-		return true;
-	}
-}
-
-
-bool delList(List* list, Segment* s){
-	if(list->length == 1){
-		list->head = NULL;
-		list->queue = NULL;
-		list->length = 0;
-		return true; 
-	}
-	return delListRec(list, list->queue, s);
-}
-
-bool delListRec(List* list, Listseg* node, Segment* s){
-	if(equalSegment(list->queue->value, s)){
-		list->queue->next->prev = NULL;
-		list->queue = list->queue->next;
-		list->length-=1;
-		return true;
-	}
-	else if(equalSegment(list->head->value, s)){
-		list->head->prev->next= NULL;
-		list->head = list->head->prev;
-		list->length-=1;
-		return true; 
-	}
-	else if(equalSegment(node->value, s)){
-		node->prev->next = node->next; 
-		node->next->prev = node->prev;
-		list->length-=1;
-		return true; 
-	}
-	else if(node->next != NULL){
-		delListRec(list, node->next, s);
-	}
-	else{
-		// printf("\nSegment is not in list\n");
-		return false;
-	}
-}
-
-
 List* concatenate(List* l1, List* l2, List* l3){
-	return concatenate2(concatenate2(l1, l2), l3);
+    List* tmp = concatenate2(l1, l2);
+    List* final = concatenate2(tmp, l3);
+    freeList(tmp);
+	return final;
 }
 
 List* concatenate2(List* l1, List* l2){
-	if(l1 != NULL && l1->head != NULL && l1->queue != NULL){
-		if(l2 != NULL && l2->head != NULL && l2->queue != NULL){
-			List* tmp = createVoidList();
-			tmp->head = l1->head; 
-			tmp->queue = l2->queue; 
-			l1->queue->next = l2->head;
-			l2->head->prev = l1->queue;
-			free(l1); 
-			free(l2); 
-			return tmp;
-		}
-		else{ // l2 == NULL
-			free(l2); 
-			return l1;
+    List* tmp = createVoidList();
+	if(l1 != NULL){
+        *tmp = *l1;
+		if(l2 != NULL){
+
+            if (l2->length == 1 && l2->queue != NULL){
+                insertListQueue(tmp, l2->queue->value);
+            }else if(l2->length==1 && l2->head != NULL){
+                insertListQueue(tmp, l2->head->value);
+            }else{
+                insertList(tmp, l2->head);
+            }
 		}
 	}
 	else{ // l1 == NULL
-		free(l1);
-		return l2;
+        *tmp = *l2;
 	}
+    return tmp;
+}
+
+
+void freeListSeg(Listseg* LS){
+    if (LS == NULL){
+        return;
+    }
+    Listseg *tmp = LS->prev;
+    freeSeg(LS->value);
+    free(LS);
+    while (tmp != NULL){
+        Listseg *tmp2 = tmp->prev;
+        freeSeg(tmp->value);
+        free(tmp);
+        tmp = tmp2;
+    }
+}
+
+void freeList(List* L){
+    if (L != NULL) {
+        freeListSeg(L->head);
+        //freeListSeg(L->queue);
+        free(L);
+    }
 }
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -339,15 +344,19 @@ void printList(List* list){
 		return;
 	}
 	else if(list->length == 0){
-		printf("\nList is empty\n");
+		printf("List is empty: length=%d\n", list->length);
 	}
 	else if(list->length == 1){
-		printf("\n<QUEUE> :[]:[");
-		printSeg2(list->queue->value);
+		printf("length=%d, <QUEUE> :[]:[", list->length);
+        if (list->queue!=NULL){
+            printSeg2(list->queue->value);
+        }else{
+            printSeg2(list->head->value);
+        }
 		printf("]:[]: <head>\n");
 	}
 	else {
-		printf("\n<QUEUE> :[]:[");
+		printf("length=%d, <QUEUE> :[]:[", list->length);
 		printListRec(list->queue);
 	}
 }
@@ -362,7 +371,7 @@ void printListRec(Listseg* node){
 		printf("]: <HEAD>\n\n");
 	}
 }
-
+/*
 void printListLight(List* list){
 	if(list == NULL){
 		printf("\nObject List is NULL\n");
@@ -391,7 +400,7 @@ void printListLightRec(Listseg* node){
 	else{
 		printf("<H>\n");
 	}
-}
+}*/
 
 
 

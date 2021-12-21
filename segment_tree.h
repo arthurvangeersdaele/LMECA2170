@@ -21,7 +21,7 @@ Treeseg *createSeg(Segment*);
 bool insertSeg(Treeseg**, Point*, Segment*, Treeseg*);
 bool delSeg(Treeseg**, Segment*, Point*);
 
-//Treeseg* findSeg(Treeseg*, Segment*, Point*);
+Treeseg* findSegAFTERUPDATE(Treeseg*, Segment*, Point*);
 Treeseg* findSegBEFOREUPDATE(Treeseg*, Segment*, Point*);
 
 Treeseg* findRSeg(Treeseg*);
@@ -34,6 +34,8 @@ Treeseg* findLeftNb(Treeseg*, Segment*, Point*, bool);
 bool findLandC(Treeseg*, Treeseg*, Point*, bool, List*, List*, List*);
 Segment* findLeftMost(Treeseg*, Treeseg*, Point*, bool);
 Segment* findRightMost(Treeseg*, Treeseg*, Point*, bool);
+
+void freeTreeseg(Treeseg*);
 
 void printtabsseg(int);
 void printTreesegRec(Treeseg*, int);
