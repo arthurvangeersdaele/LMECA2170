@@ -8,11 +8,12 @@
 #include "point_list.h"
 #include "sweepline.h"
 
-
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Create Data Structure
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 dataStruct* initDataStruct(){
     dataStruct *result = malloc(sizeof(dataStruct));
     if (result != NULL) {
-        //result->Intersections = createVoidListP();
         result->Intersections = NULL;
         result->Q = NULL;
         result->Tau = NULL;
@@ -26,6 +27,9 @@ dataStruct* initDataStruct(){
     return result;
 }
 
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Deletion / Insertion in the different elements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 void delForL(Treeseg** Tau, Listseg* Li, Point* p){
     if (Li != NULL){
         delSeg(Tau, Li->value, p);
@@ -62,7 +66,9 @@ void createQ(Listseg* s, Treenode** Q){
     }
 }
 
-
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Algorithm Main Fonctions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 void findNewEvent(Segment *sL, Segment *sR, Point *p, Treenode **Q, dataStruct *data){
 
     double mL, mR;
@@ -85,7 +91,7 @@ void findNewEvent(Segment *sL, Segment *sR, Point *p, Treenode **Q, dataStruct *
             y_inter = pL + mL * x_inter;
             if (y_inter > p->y || (y_inter == p->y && x_inter > p->x)){ // intersection happens bellow the sweep line
                 Point *inter = createPoint(x_inter, y_inter, NULL);
-                if ((contains(inter,sL) || equalPoint(inter, sL->p0) || equalPoint(inter, sL->p1)) && (contains(inter,sR) || equalPoint(inter, sR->p0) || equalPoint(inter, sR->p1))){;
+                if ((contains(inter,sL) || equalPoint(inter, sL->p0) || equalPoint(inter, sL->p1)) && (contains(inter,sR) || equalPoint(inter, sR->p0) || equalPoint(inter, sR->p1))){
                     insertPoint(Q, inter, *Q, NULL, false);
                 }
                 freePoint(inter);
@@ -184,7 +190,6 @@ void HandleEventPoint(dataStruct *data){
         }
     }
     freeList(C);
-    //return data->Tau;
 }
 
 
@@ -238,7 +243,7 @@ bool FindIntersections2(List* s, dataStruct *data, Point* red_point){
 
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//%%%             CONVERTERS Tab - Tree - List
+//%%% CONVERTERS Tab - Tree - List
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 List* fromTab2List(GLfloat coord[][2], GLsizei nPoints){
     List* segmentList = createVoidList();
@@ -337,7 +342,9 @@ int TreenodeSize(Treenode* tree) {
     return ans;
 }
 
-
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%%  Free Data Structure
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 void freeDatastruct(dataStruct *data){
     if (data != NULL){
         freeListP(data->Intersections);
@@ -350,5 +357,6 @@ void freeDatastruct(dataStruct *data){
         freeSeg(data->LN);
         freeList(data->RLN);
         free(data);
+        data = NULL;
     }
 }

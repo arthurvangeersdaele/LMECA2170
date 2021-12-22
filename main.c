@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-//#include <unistd.h>
+//#include <unistd.h> // (FOR LINUX - uncomment for WINDOWS)
 #include "inputs.h"
 #include "geometry.h"
 #include "sweepline.h"
@@ -31,15 +31,37 @@ int main(int argc, char* argv[])
 
 
     // - defining segments
-    GLsizei nPoints = 500;             // --- has to be even (and should be below 250 if you want to animate it)
+    GLsizei nPoints = 18;            // --- has to be even (and should be below 250 if you want to animate it)
 
-    // randomly define points
-    int seed = 1639935196;            // (int)time(NULL);
+    // randomly define segment from random points array
+    /*int seed = (int)time(NULL);
     printf("[MAIN] seed : %d\n", seed);
     srand(seed);
     GLfloat(*segment_coord)[2] = malloc(sizeof(segment_coord[0]) * nPoints);
-    random_points(segment_coord, nPoints);
+    random_points(segment_coord, nPoints);*/
 
+    // predefined set of segments (nPoints has to be = 18)
+        GLfloat segment_coord[18][2] = {
+            { (0.087f - 0.5f) * 3.0f,  (0.364f - 0.15f) * 3.0f }, //A
+            { (0.284f - 0.5f) * 3.0f,  (0.322f - 0.15f) * 3.0f }, //B
+            { (0.421f - 0.5f) * 3.0f,  (0.279f - 0.15f) * 3.0f }, //C
+            { (0.300f - 0.5f) * 3.0f,  (0.150f - 0.15f) * 3.0f }, //D
+            { (0.770f - 0.5f) * 3.0f,  (0.100f - 0.15)  * 3.0f }, //E
+            { (0.250f - 0.5f) * 3.0f,  (0.350f - 0.15f) * 3.0f }, //F
+            { (0.477f - 0.5f) * 3.0f,  (0.261f - 0.15f) * 3.0f }, //G
+            { (0.359f - 0.5f) * 3.0f,  (0.213f - 0.15f) * 3.0f }, //H
+            { (0.359f - 0.5f) * 3.0f,  (0.080f - 0.15f) * 3.0f }, //I
+            { (0.470f - 0.5f) * 3.0f,  (0.123f - 0.15f) * 3.0f }, //J
+            { (0.044f - 0.5f) * 3.0f,  (0.307f - 0.15f) * 3.0f }, //K
+            { (0.071f - 0.5f) * 3.0f,  (0.253f - 0.15f) * 3.0f }, //L
+            { (0.569f - 0.5f) * 3.0f,  (0.308f - 0.15f) * 3.0f }, //M
+            { (0.624f - 0.5f) * 3.0f,  (0.239f - 0.15f) * 3.0f }, //N
+            { (0.569f - 0.5f) * 3.0f,  (0.308f - 0.15f) * 3.0f }, //M
+            { (0.550f - 0.5f) * 3.0f,  (0.220f - 0.15f) * 3.0f }, //O
+            { (0.550f - 0.5f) * 3.0f,  (0.220f - 0.15f) * 3.0f }, //O
+            { (0.624f - 0.5f) * 3.0f,  (0.239f - 0.15f) * 3.0f }, //N
+    };
+    // -- don't forget to adapt the value of the "nPoints" variable above to 18 !
 
     /*                                        _
          _ __    _ __    ___    ___    ___   | |_   ___
@@ -49,7 +71,7 @@ int main(int argc, char* argv[])
         |_ |
     */
 
-    int preset = 4;
+    int preset = 0;
 
     // 0 - execute the algorithm and print the results in the console
     // 1 - simple image (fullscreen)
@@ -76,7 +98,7 @@ int main(int argc, char* argv[])
     bool fullscreen = true;                 // fullscreen is forced for automated animation (without click)
 
     // - min. duration per frame
-    float dt = 1500.0;                         // [ms] for animation without click
+    float dt = 1500;                         // [ms] for animation without click
 
 
 
@@ -229,8 +251,6 @@ int main(int argc, char* argv[])
 
     List* segmentList = fromTab2List(segment_coord, nPoints); // conversion of the point array into segment linked-list
 
-    //fullscreen = (animation && !on_click && ! image) || fullscreen; // fullscreen is forced for automated display
-
     if (dt == 0.0) { // impose minimal dt
         dt = 0.00f;
     }
@@ -323,18 +343,14 @@ int main(int argc, char* argv[])
             .outlineWidth = 0.005f
     };
     bov_points_param_t segmentParams = {
-            //.fillColor = {0.0f, 0.0f, 0.0f, 1.0f},
-            //.outlineColor = {0.0f ,0.0f, 0.0f, 0.5f},
-            .fillColor = {0.7f, 0.7f, 0.7f, 1.0f},  // Tau differenciation
+            .fillColor = {0.7f, 0.7f, 0.7f, 1.0f},  
             .outlineColor = {0.0f ,0.0f, 0.0f, 0.0f},
             .scale = {1.0, 1.0},
             .width = 0.005f,
             .outlineWidth = 0.00125f
     };
     bov_points_param_t pointParams = {
-            //.fillColor = {0.0f, 0.0f, 0.0f, 1.0f},
-            //.outlineColor = {0.0f ,0.0f, 0.0f, 0.5f},
-            .fillColor = {0.7f, 0.7f, 0.7f, 1.0f},  // Tau differenciation
+            .fillColor = {0.7f, 0.7f, 0.7f, 1.0f}, 
             .outlineColor = {0.0f ,0.0f, 0.0f, 0.0f},
             .scale = {1.0f, 1.0f},
             .width = 0.015f,
@@ -394,7 +410,6 @@ int main(int argc, char* argv[])
     };
     // %%% --- RightNeigh and RightMost segments
     bov_points_param_t smsrParams = {
-            //.fillColor = {0.203f, 0.670f, 0.329f, 0.5f},
             .fillColor = {0.0f, 1.0f, 0.0f, 0.5f},
             .outlineColor = {0.0f, 0.53f, 0.266f, 0.0f},
             .scale = {1.0f, 1.0f},
@@ -402,7 +417,6 @@ int main(int argc, char* argv[])
             .outlineWidth = 0.00125f
     };
     bov_points_param_t psmsrParams = {
-            //.fillColor = {0.203f, 0.670f, 0.329f, 0.5f},
             .fillColor = {0.0f, 1.0f, 0.0f, 0.5f},
             .outlineColor = {0.0f, 0.53f, 0.266f, 0.0f},
             .scale = {1.0f, 1.0f},
@@ -411,7 +425,6 @@ int main(int argc, char* argv[])
     };
     // %%% --- LeftNeigh and LeftMost segments
     bov_points_param_t smslParams = {
-            //.fillColor = {0.839f, 0.176f, 0.125f, 0.5f},
             .fillColor = {1.0f, 0.0f, 0.0f, 0.5f},
             .outlineColor = {0.0f, 0.53f, 0.266f, 0.0f},
             .scale = {1.0f, 1.0f},
@@ -457,7 +470,6 @@ int main(int argc, char* argv[])
             .outlineWidth = 0.005f
     };
     // %%% --- Textes
-    GLfloat pixel64 = 2.0f / bov_window_get_yres(window) * 64.0f; //~64 pixels height
     bov_text_param_t textParams1 = {
             .outlineColor = { 1.0, 0.0, 0.0, 1.0 },
             .fillColor = {0.839f, 0.176f, 0.125f, 1.0f},
@@ -693,9 +705,9 @@ int main(int argc, char* argv[])
                     freePoint(copy_point);
                     copy_point = createPoint(data->p->x, data->p->y, data->p->U);
 
-                    if ((window->wtime - iter_start_time) < dt) {
-                         //sleep(dt - (window->wtime + iter_start_time)/1000.); // (LINUX)
-                         Sleep(dt - (window->wtime + iter_start_time)); // (WINDOWS)
+                    if ((window->wtime - iter_start_time)/1000. < dt) {
+                        //sleep(dt - (window->wtime + iter_start_time)/1000.); // (FOR LINUX)
+                        Sleep(dt - (window->wtime + iter_start_time)); // (FOR WINDOWS)
                     }
                     bov_text_t* text_indication = bov_text_new(
                             (GLubyte[]) {
@@ -706,9 +718,6 @@ int main(int argc, char* argv[])
                     bov_text_set_param(text_indication, textParams2);
                     bov_text_draw(window, text_indication);
                     bov_text_delete(text_indication);
-
-                    /*p_coord[0][0] = (float)data->p->x;
-                    p_coord[0][1] = (float)-data->p->y;*/
                 }
                 else {
                     bov_text_t* text_indication = bov_text_new(
@@ -745,7 +754,6 @@ int main(int argc, char* argv[])
             bov_text_set_param(text_obj, textParams1);
             bov_text_draw(window, text_obj);
             bov_text_delete(text_obj);
-
             if (finished) {
                 bov_text_t* text_indication = bov_text_new(
                         (GLubyte[]) {
@@ -756,8 +764,6 @@ int main(int argc, char* argv[])
                 bov_text_draw(window, text_indication);
                 bov_text_delete(text_indication);
             }
-
-
 
             // update Tau
             if (TreesegSize(data->Tau) > 0) {
@@ -770,6 +776,7 @@ int main(int argc, char* argv[])
                 free(tau_coord);
 
             }
+
             // update LeftMost/LeftNeigh and RightMost/RightNeigh Segments
             if (data->RLN != NULL) {
                 ListP *SMS = createVoidListP();
@@ -785,11 +792,6 @@ int main(int argc, char* argv[])
                 bov_points_set_param(sms, smsParams);
                 bov_lines_draw(window, sms, 0, SMS->length);
                 bov_points_delete(sms);
-
-                /*bov_points_t* psms = bov_points_new(sms_coord, sizeof(sms_coord), GL_DYNAMIC_DRAW);
-                bov_points_set_param(psms, psmsParams);
-                bov_points_draw(window, psms, 0, SMS->length);
-                bov_points_delete(psms);*/
 
                 freeListP(SMS);
                 free(sms_coord);
@@ -812,11 +814,6 @@ int main(int argc, char* argv[])
                 bov_lines_draw(window, smsr, 0, SMSR->length);
                 bov_points_delete(smsr);
 
-                /*bov_points_t *psmsr = bov_points_new(smsr_coord, sizeof(smsr_coord), GL_DYNAMIC_DRAW);
-                bov_points_set_param(psmsr, psmsrParams);
-                bov_points_draw(window, psmsr, 0, SMSR->length);
-                bov_points_delete(psmsr);*/
-
                 freeListP(SMSR);
                 free(smsr_coord);
             }
@@ -837,11 +834,6 @@ int main(int argc, char* argv[])
                 bov_points_set_param(smsl, smslParams);
                 bov_lines_draw(window, smsl, 0, SMSL->length);
                 bov_points_delete(smsl);
-
-                /*bov_points_t* psmsl = bov_points_new(smsl_coord, sizeof(smsl_coord), GL_DYNAMIC_DRAW);
-                bov_points_set_param(psmsl, psmslParams);
-                bov_points_draw(window, psmsl, 0, SMSL->length);
-                bov_points_delete(psmsl);*/
 
                 freeListP(SMSL);
                 free(smsl_coord);
@@ -869,12 +861,10 @@ int main(int argc, char* argv[])
             bov_points_set_param(sweepline, sweeplineParams);
             bov_lines_draw(window, sweepline, 0, 2);
 
-
             // redraw point p in red over sweepline
             p = bov_points_new(p_coord, 1, GL_STATIC_DRAW);
             bov_points_set_param(p, pParams);
             bov_points_draw(window, p, 0, 1);
-
 
             // others
             curr_click = false;
@@ -895,32 +885,3 @@ int main(int argc, char* argv[])
 
     return EXIT_SUCCESS;
 }
-
-
-
-// JUST FOR YOU -  a well-predefined segment list   ( Merry Christmas ! )
-
-// NOTE : the tree segments defined by the points M-N-O are generating a (Mystic) bug on one laptop (WINDOWS) but not on the other (LINUX)
-
-//    GLfloat segment_coord[18][2] = {
-//    { 0.087f,  0.364f }, //A
-//    { 0.284f,  0.322f }, //B
-//    { 0.421f,  0.279f }, //C
-//    { 0.300f,  0.150f }, //D
-//    { 0.770f,  0.100f }, //E
-//    { 0.250f,  0.350f }, //F
-//    { 0.477f,  0.261f }, //G
-//    { 0.359f,  0.213f }, //H
-//    { 0.359f,  0.080f }, //I
-//    { 0.470f,  0.123f }, //J
-//    { 0.044f,  0.307f }, //K
-//    { 0.071f,  0.253f }, //L
-//    { 0.569f,  0.308f }, //M
-//    { 0.624f,  0.239f }, //N
-//    { 0.569f,  0.308f }, //M
-//    { 0.550f,  0.220f }, //O
-//    { 0.550f,  0.220f }, //O
-//    { 0.624f,  0.239f }, //N
-//};
-
-// -- don't forget to adapt the value of the "nPoints" variable above to : 18

@@ -1,8 +1,6 @@
 #ifndef SWEEPLINE_H_
 #define SWEEPLINE_H_
 
-//#include "BOV.h"
-//#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -25,20 +23,31 @@ typedef struct dataStruct{
     struct List* RLN;
 } dataStruct;
 
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Create Data Structure
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 dataStruct* initDataStruct();
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Deletion / Insertion in the different elements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 void delForC(Treeseg**, Listseg*, Point*);
 void insertForC(Treeseg**, Listseg*, Point*);
 void insertForU(Treeseg**, Listseg*, Point*);
 void createQ(Listseg*, Treenode**);
 
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Algorithm Main Fonctions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 void findNewEvent(Segment*, Segment*, Point*, Treenode**, dataStruct*);
-
 void HandleEventPoint(dataStruct*);
-
 bool FindIntersections(List*, dataStruct*);
 bool FindIntersections2(List*, dataStruct*, Point*);
 
 
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%% CONVERTERS Tab - Tree - List
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 List* fromTab2List(GLfloat[][2], GLsizei);
 bool fromListP2Tab(ListP*, GLfloat[][2]);
 bool fromTreeseg2Tab(Treeseg*, GLfloat[][2]);
@@ -48,5 +57,8 @@ bool fromTreenode2ListP(ListP*, Treenode*);
 int TreenodeSize(Treenode*);
 int TreesegSize(Treeseg*);
 
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%%  Free Data Structure
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 void freeDatastruct(dataStruct*);
 #endif

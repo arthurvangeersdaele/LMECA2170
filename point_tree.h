@@ -18,7 +18,6 @@ typedef struct Treenode {
 }Treenode;
 
 Treenode *createNode(Point*);
-// bool checkTree(Treenode*);
 bool insertPoint(Treenode**, Point*, Treenode*, Segment*, bool);
 bool findPoint(Treenode*, Point*);
 Point* delPoint(Treenode**);

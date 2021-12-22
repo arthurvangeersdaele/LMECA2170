@@ -28,7 +28,6 @@ struct Point{
 	double x;
 	double y;
 	struct List* U;
-	//Segment* segments;
 };
 
 Point *createPoint(double, double, List*);
@@ -89,9 +88,6 @@ bool insertListQueue(List*, Segment*);
 bool insertList(List*, Listseg*);
 
 bool delHead(List*);
-//bool delQueue(List*);
-//bool delList(List*, Segment*);
-//bool delListRec(List*, Listseg*, Segment*);
 
 List* concatenate(List*, List*, List*);
 List* concatenate2(List*, List*);
@@ -101,9 +97,6 @@ void freeListSeg(Listseg*);
 
 void printList(List*);
 void printListRec(Listseg*);
-void printListLight(List*);
-void printListLightRec(Listseg*);
-
 #endif
 
 

@@ -17,10 +17,20 @@ typedef struct Treeseg {
 
 }Treeseg;
 
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Create Segment Tree Node
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 Treeseg *createSeg(Segment*);
+
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Insert / Delete
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 bool insertSeg(Treeseg**, Point*, Segment*, Treeseg*);
 bool delSeg(Treeseg**, Segment*, Point*);
 
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Segment Node Finders
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 Treeseg* findSegAFTERUPDATE(Treeseg*, Segment*, Point*);
 Treeseg* findSegBEFOREUPDATE(Treeseg*, Segment*, Point*);
 
@@ -35,8 +45,14 @@ bool findLandC(Treeseg*, Treeseg*, Point*, bool, List*, List*, List*);
 Segment* findLeftMost(Treeseg*, Treeseg*, Point*, bool);
 Segment* findRightMost(Treeseg*, Treeseg*, Point*, bool);
 
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Segment Tree Freeing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 void freeTreeseg(Treeseg*);
 
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Tree Print functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 void printtabsseg(int);
 void printTreesegRec(Treeseg*, int);
 void printTreeseg(Treeseg*);
