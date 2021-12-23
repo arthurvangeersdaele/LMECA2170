@@ -1,19 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
 #include "geometry.h"
 
 
 bool feq(double x, double y){
     return (y<x+tol && y>x-tol);
-}
-
-bool fgreater(double x, double y){
-    return (x > y-tol);
-}
-bool flower(double x, double y){
-    return (x < y-tol);
 }
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -164,15 +156,6 @@ Listseg *createListseg(Segment* s){
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% CREATE A LIST STRUCTURE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-
-List *createList(Segment* s){
-    List* result = malloc(sizeof(List));
-    if (result != NULL) {
-        result->head = createListseg(s);
-        result->length = 1;
-    }
-    return result;
-}
 List *createVoidList(){
     List* result = malloc(sizeof(List));
     if (result != NULL) {
@@ -259,27 +242,8 @@ bool insertList(List* l1, Listseg* l2){//length l2 must be >1
 
 
 /*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% DELETE A SEGMENT IN LIST
+%%% LIST CONCATENATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
-
-bool delHead(List* list){
-    if(list->length == 0){
-        return false;
-    }
-    if(list->length == 1){
-        freeList(list);
-        return true;
-    }
-    else{
-        freeSeg(list->head->value);
-        free(list->head);
-        list->head = list->head->prev;
-        list->head->next = NULL;
-        list->length -=1;
-        return true;
-    }
-}
-
 List* concatenate(List* l1, List* l2, List* l3){
     List* tmp = concatenate2(l1, l2);
     List* final = concatenate2(tmp, l3);
@@ -292,14 +256,7 @@ List* concatenate2(List* l1, List* l2){
     if(l1 != NULL){
         insertList(tmp, l1->head);
         if(l2 != NULL){
-
-            if (l2->length == 1 && l2->queue != NULL){
-                insertListQueue(tmp, l2->queue->value);
-            }else if(l2->length==1 && l2->head != NULL){
-                insertListQueue(tmp, l2->head->value);
-            }else{
-                insertList(tmp, l2->head);
-            }
+            insertList(tmp, l2->head);
         }
     }
     else{ // l1 == NULL
@@ -308,7 +265,9 @@ List* concatenate2(List* l1, List* l2){
     return tmp;
 }
 
-
+/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% FREE LIST
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 void freeListSeg(Listseg* LS){
     if (LS == NULL){
         return;
@@ -328,7 +287,6 @@ void freeListSeg(Listseg* LS){
 void freeList(List* L){
     if (L != NULL) {
         freeListSeg(L->head);
-        //freeListSeg(L->queue);
         free(L);
         L = NULL;
     }

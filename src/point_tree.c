@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
 #include "geometry.h"
 #include "point_tree.h"
 
@@ -85,10 +84,15 @@ Point* delPoint(Treenode **root){ // Delete the point the most on the left of th
             par->left = r;
             return p;
         }
-        if((*root)->parent != NULL && (*root)->right == NULL){ // the parent of the node is now a leaf
+        else if((*root)->parent != NULL && (*root)->right == NULL){ // the parent of the node is now a leaf
             Point* p = createPoint((*root)->value->x, (*root)->value->y, (*root)->value->U);
-            (*root)->parent->left = NULL;
-            freeTreenode(*root);
+            Treenode *par = (*root)->parent;
+
+            freePoint((*root)->value);
+            free(*root);
+            *root = NULL;
+
+            par->left = NULL;
             return p;
         }
         else if((*root)->parent== NULL && (*root)->right != NULL){ // the right child becomes the upper parent of the tree

@@ -29,39 +29,48 @@ int main(int argc, char* argv[])
         88           d8'          `8b  88      `8b  d8'          `8b  88     `8'     88  88888888888       88       88888888888  88      `8b   "Y88888P"
     */
 
-
+    /*                                                    _         
+          ___    ___    __ _   _ __ ___     ___   _ __   | |_   ___ 
+         / __|  / _ \  / _` | | '_ ` _ \   / _ \ | '_ \  | __| / __|
+         \__ \ |  __/ | (_| | | | | | | | |  __/ | | | | | |_  \__ \
+         |___/  \___|  \__, | |_| |_| |_|  \___| |_| |_|  \__| |___/
+                       |___/         
+    */     
     // - defining segments
-    GLsizei nPoints = 18;            // --- has to be even (and should be below 250 if you want to animate it)
+    GLsizei nPoints = 18; // --- has to be even (and should be below 250 if you want to animate it)
 
     // randomly define segment from random points array
-    /*int seed = (int)time(NULL);
+    /*bool random_segment = true;
+    int seed = (int)time(NULL);
     printf("[MAIN] seed : %d\n", seed);
     srand(seed);
     GLfloat(*segment_coord)[2] = malloc(sizeof(segment_coord[0]) * nPoints);
     random_points(segment_coord, nPoints);*/
 
     // predefined set of segments (nPoints has to be = 18)
-        GLfloat segment_coord[18][2] = {
-            { (0.087f - 0.5f) * 3.0f,  (0.364f - 0.15f) * 3.0f }, //A
-            { (0.284f - 0.5f) * 3.0f,  (0.322f - 0.15f) * 3.0f }, //B
-            { (0.421f - 0.5f) * 3.0f,  (0.279f - 0.15f) * 3.0f }, //C
-            { (0.300f - 0.5f) * 3.0f,  (0.150f - 0.15f) * 3.0f }, //D
-            { (0.770f - 0.5f) * 3.0f,  (0.100f - 0.15)  * 3.0f }, //E
-            { (0.250f - 0.5f) * 3.0f,  (0.350f - 0.15f) * 3.0f }, //F
-            { (0.477f - 0.5f) * 3.0f,  (0.261f - 0.15f) * 3.0f }, //G
-            { (0.359f - 0.5f) * 3.0f,  (0.213f - 0.15f) * 3.0f }, //H
-            { (0.359f - 0.5f) * 3.0f,  (0.080f - 0.15f) * 3.0f }, //I
-            { (0.470f - 0.5f) * 3.0f,  (0.123f - 0.15f) * 3.0f }, //J
-            { (0.044f - 0.5f) * 3.0f,  (0.307f - 0.15f) * 3.0f }, //K
-            { (0.071f - 0.5f) * 3.0f,  (0.253f - 0.15f) * 3.0f }, //L
-            { (0.569f - 0.5f) * 3.0f,  (0.308f - 0.15f) * 3.0f }, //M
-            { (0.624f - 0.5f) * 3.0f,  (0.239f - 0.15f) * 3.0f }, //N
-            { (0.569f - 0.5f) * 3.0f,  (0.308f - 0.15f) * 3.0f }, //M
-            { (0.550f - 0.5f) * 3.0f,  (0.220f - 0.15f) * 3.0f }, //O
-            { (0.550f - 0.5f) * 3.0f,  (0.220f - 0.15f) * 3.0f }, //O
-            { (0.624f - 0.5f) * 3.0f,  (0.239f - 0.15f) * 3.0f }, //N
+    bool random_segment = false;
+    GLfloat segment_coord[18][2] = {
+        { (0.087f - 0.5f) * 3.0f,  (0.364f - 0.15f) * 3.0f }, //A
+        { (0.284f - 0.5f) * 3.0f,  (0.322f - 0.15f) * 3.0f }, //B
+        { (0.421f - 0.5f) * 3.0f,  (0.279f - 0.15f) * 3.0f }, //C
+        { (0.300f - 0.5f) * 3.0f,  (0.150f - 0.15f) * 3.0f }, //D
+        { (0.770f - 0.5f) * 3.0f,  (0.100f - 0.15)  * 3.0f }, //E
+        { (0.250f - 0.5f) * 3.0f,  (0.350f - 0.15f) * 3.0f }, //F
+        { (0.477f - 0.5f) * 3.0f,  (0.261f - 0.15f) * 3.0f }, //G
+        { (0.359f - 0.5f) * 3.0f,  (0.213f - 0.15f) * 3.0f }, //H
+        { (0.359f - 0.5f) * 3.0f,  (0.080f - 0.15f) * 3.0f }, //I
+        { (0.470f - 0.5f) * 3.0f,  (0.123f - 0.15f) * 3.0f }, //J
+        { (0.044f - 0.5f) * 3.0f,  (0.307f - 0.15f) * 3.0f }, //K
+        { (0.071f - 0.5f) * 3.0f,  (0.253f - 0.15f) * 3.0f }, //L
+        { (0.569f - 0.5f) * 3.0f,  (0.308f - 0.15f) * 3.0f }, //M
+        { (0.624f - 0.5f) * 3.0f,  (0.239f - 0.15f) * 3.0f }, //N
+        { (0.569f - 0.5f) * 3.0f,  (0.308f - 0.15f) * 3.0f }, //M
+        { (0.550f - 0.5f) * 3.0f,  (0.220f - 0.15f) * 3.0f }, //O
+        { (0.550f - 0.5f) * 3.0f,  (0.220f - 0.15f) * 3.0f }, //O
+        { (0.624f - 0.5f) * 3.0f,  (0.239f - 0.15f) * 3.0f }, //N
     };
     // -- don't forget to adapt the value of the "nPoints" variable above to 18 !
+
 
     /*                                        _
          _ __    _ __    ___    ___    ___   | |_   ___
@@ -71,23 +80,23 @@ int main(int argc, char* argv[])
         |_ |
     */
 
-    int preset = 0;
+    int preset = 2;
 
     // 0 - execute the algorithm and print the results in the console
     // 1 - simple image (fullscreen)
-    // 2 - slow little animation (20 seg. max, fullscreen)
-    // 3 - quick animation (100 seg. max, fullscreen)
-    // 4 - fastest animation (100 seg. max, fullscreen)
-    // 5 - on-click animation ! (fullscreen)
+    // 2 - slow little animation (20 first seg. only, fullscreen)
+    // 3 - quick animation (500 first seg. only, fullscreen)
+    // 4 - fastest animation (500 first seg. only, fullscreen)
+    // 5 - on-click animation ! (500 first seg. only, fullscreen)
     //-1 - let you use customized parameters (*)
 
 
 
-    /*                           _
-            ____   _   _   ___  | |_    ___    _ __ ___  (*)
-           / ___| | | | | / __| | __|  / _ \  | '_ ` _ \
-           | (__  | |_| | \__ \ | |_  | (_) | | | | | | |
-           \____|  \__,_| |___/ \__ |  \___/  |_| |_| |_|
+    /*                       _
+        ____   _   _   ___  | |_    ___    _ __ ___  (*)
+       / ___| | | | | / __| | __|  / _ \  | '_ ` _ \
+       | (__  | |_| | \__ \ | |_  | (_) | | | | | | |
+       \____|  \__,_| |___/ \__ |  \___/  |_| |_| |_|
    */
 
     // - display
@@ -98,7 +107,7 @@ int main(int argc, char* argv[])
     bool fullscreen = true;                 // fullscreen is forced for automated animation (without click)
 
     // - min. duration per frame
-    float dt = 1500;                         // [ms] for animation without click
+    float dt = 1500.0;                         // [ms] for animation without click
 
 
 
@@ -221,8 +230,8 @@ int main(int argc, char* argv[])
         animation = true;
         on_click = false;
         fullscreen = true;
-        if (nPoints > 200) {
-            nPoints = 200;
+        if (nPoints > 1000) {
+            nPoints = 1000;
         }
         dt = 500.0;
     }
@@ -232,8 +241,8 @@ int main(int argc, char* argv[])
         animation = true;
         on_click = false;
         fullscreen = true;
-        if (nPoints > 200) {
-            nPoints = 200;
+        if (nPoints > 1000) {
+            nPoints = 1000;
         }
         dt = 0.0;
     }
@@ -243,17 +252,13 @@ int main(int argc, char* argv[])
         animation = true;
         on_click = true;
         fullscreen = true;
-        if (nPoints > 200) {
-            nPoints = 200;
+        if (nPoints > 1000) {
+            nPoints = 1000;
         }
         dt = 0.0;
     }
 
     List* segmentList = fromTab2List(segment_coord, nPoints); // conversion of the point array into segment linked-list
-
-    if (dt == 0.0) { // impose minimal dt
-        dt = 0.00f;
-    }
 
 
 
@@ -299,7 +304,7 @@ int main(int argc, char* argv[])
 
         freeDatastruct(data);
         freeList(segmentList);
-        free(segment_coord);
+        if(random_segment){free(segment_coord);}
         return EXIT_SUCCESS;
     }
 
@@ -594,7 +599,7 @@ int main(int argc, char* argv[])
 
         freeDatastruct(data);
         freeList(segmentList);
-        free(segment_coord);
+        if(random_segment){free(segment_coord);}
 
         bov_points_delete(sweepline);
         bov_points_delete(p);
@@ -720,6 +725,11 @@ int main(int argc, char* argv[])
                     bov_text_delete(text_indication);
                 }
                 else {
+                    finished = true; 
+                    if ((window->wtime - iter_start_time) / 1000. < dt) {
+                        //sleep(dt - (window->wtime + iter_start_time)/1000.); // (FOR LINUX)
+                        Sleep(dt - (window->wtime + iter_start_time)); // (FOR WINDOWS)
+                    }
                     bov_text_t* text_indication = bov_text_new(
                             (GLubyte[]) {
                                     "\x93 You reached the end of the set of segments !",
@@ -869,12 +879,17 @@ int main(int argc, char* argv[])
             // others
             curr_click = false;
             bov_window_update(window);
+            if (finished) {
+                //sleep(3.0); // (FOR LINUX)
+                Sleep(3000.0); // (FOR WINDOWS)
+                break;
+            }
         }
         freeDatastruct(data);
         freePoint(last_p);
         freePoint(copy_point);
         freeList(segmentList);
-        free(segment_coord);
+        if(random_segment){free(segment_coord);}
         bov_points_delete(point);
         bov_points_delete(segment);
         bov_window_delete(window);
